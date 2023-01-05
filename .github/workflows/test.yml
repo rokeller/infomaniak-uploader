@@ -27,12 +27,12 @@ jobs:
       - name: Create file with random content
         shell: bash
         run: |
-          mkdir -p $GITHUB_WORKSPACE/test-data
-          uuidgen > $GITHUB_WORKSPACE/test-data/test.txt
+          mkdir test-data
+          uuidgen > test-data/test.txt
       - uses: ./
         with:
           ftpServer: ${{ secrets.TEST_FTP_SERVER }}
           ftpUser: ${{ secrets.TEST_FTP_USER }}
           ftpPassword: ${{ secrets.TEST_FTP_PASSWORD }}
-          localRoot: '${{ env.GITHUB_WORKSPACE }}/test-data'
+          localRoot: 'test-data'
           remoteRoot: /test
