@@ -34,5 +34,5 @@ jobs:
           ftpServer: ${{ secrets.TEST_FTP_SERVER }}
           ftpUser: ${{ secrets.TEST_FTP_USER }}
           ftpPassword: ${{ secrets.TEST_FTP_PASSWORD }}
-          localRoot: $GITHUB_WORKSPACE/test-data
+          localRoot: '${{ env.GITHUB_WORKSPACE }}/test-data'
           remoteRoot: /test
