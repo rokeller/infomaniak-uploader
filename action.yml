@@ -1,11 +1,24 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Infomaniak Uploader'
+description: 'Uploads files securely through the Infomaniak FTP Manager'
+author: 'Roger K.'
 inputs:
-  milliseconds: # change this
+  ftpServer:
+    description: 'domain name of the Infomaniak-hosted FTP server'
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  ftpUser:
+    description: 'user name for FTP access'
+    required: true
+  ftpPassword:
+    description: 'password for FTP access'
+    required: true
+  localRoot:
+    description: 'path to the local folder (on the agent) to upload from'
+    required: true
+  remoteRoot:
+    description: 'path to the remote folder (on the FTP server) to upload to'
+    required: true
+    default: '/'
+
 runs:
   using: 'node16'
   main: 'dist/index.js'

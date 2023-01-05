@@ -1,29 +1,34 @@
-import {wait} from '../src/wait'
-import * as process from 'process'
-import * as cp from 'child_process'
-import * as path from 'path'
-import {expect, test} from '@jest/globals'
+import { expect, jest, test } from '@jest/globals';
+import axios from 'axios';
+import * as cp from 'child_process';
+import { randomUUID } from 'crypto';
+import { writeFile } from 'fs/promises';
+import * as path from 'path';
+import * as process from 'process';
 
-test('throws invalid number', async () => {
-  const input = parseInt('foo', 10)
-  await expect(wait(input)).rejects.toThrow('milliseconds not a number')
-})
+jest.setTimeout(30 * 1000);
 
-test('wait 500 ms', async () => {
-  const start = new Date()
-  await wait(500)
-  const end = new Date()
-  var delta = Math.abs(end.getTime() - start.getTime())
-  expect(delta).toBeGreaterThan(450)
-})
+test('test runs', async () => {
+    process.env['INPUT_FTPSERVER'] = process.env['FTP_SERVER'];
+    process.env['INPUT_FTPUSER'] = process.env['FTP_USER'];
+    process.env['INPUT_FTPPASSWORD'] = process.env['FTP_PASS'];
+    process.env['INPUT_LOCALROOT'] = path.join(__dirname, 'data');
+    process.env['INPUT_REMOTEROOT'] = '/test';
 
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = '500'
-  const np = process.execPath
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
-  const options: cp.ExecFileSyncOptions = {
-    env: process.env
-  }
-  console.log(cp.execFileSync(np, [ip], options).toString())
-})
+    const validationUrl = path.join(process.env['VERIFY_BASE_URL'] || '', 'test/test.txt');
+    const testFile = path.join(__dirname, 'data/test.txt');
+    const testData = randomUUID();
+
+    await writeFile(testFile, testData);
+
+    const np = process.execPath
+    const ip = path.join(__dirname, '..', 'lib', 'main.js')
+    const options: cp.ExecFileSyncOptions = {
+        env: process.env,
+    }
+
+    console.log(cp.execFileSync(np, [ip], options).toString())
+
+    const resp = await axios.get<string>(validationUrl);
+    expect(resp.data).toBe(testData);
+});

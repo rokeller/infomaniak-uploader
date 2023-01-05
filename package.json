@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
+  "name": "infomaniak-uploader",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Uploads files securely to Infomaniak-hosted FTP servers using the Infomaniak FTP Manager",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -11,11 +11,11 @@
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run build && npm run lint && npm run package && npm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/rokeller/infomaniak-uploader.git"
   },
   "keywords": [
     "actions",
@@ -25,12 +25,19 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.10.0"
+    "@actions/core": "^1.10.0",
+    "axios": "^1.2.2",
+    "axios-cookiejar-support": "^4.0.6",
+    "form-data": "^4.0.0",
+    "http-cookie-agent": "^5.0.2",
+    "tough-cookie": "^4.1.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.0",
+    "@types/tough-cookie": "^4.0.2",
     "@typescript-eslint/parser": "^4.33.0",
     "@vercel/ncc": "^0.31.1",
+    "dotenv": "^16.0.3",
     "eslint": "^7.32.0",
     "eslint-plugin-github": "^4.3.2",
     "eslint-plugin-jest": "^25.3.2",

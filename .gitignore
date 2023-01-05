@@ -97,3 +97,6 @@ Thumbs.db
 # Ignore built ts files
 __tests__/runner/*
 lib/**/*
+
+# Ignore test data file that gets its contents replaced
+__tests__/data/test.txt
