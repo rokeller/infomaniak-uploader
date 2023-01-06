@@ -35,3 +35,5 @@ Manager to upload files from GitHub workflows.
     # (Optional) The path on the FTP server to upload to. Defaults to '/'
     remoteRoot: '/about'
 ```
+
+**Important**: Uploading files with > 2 000 000 byte is not currently supported.
