@@ -15,12 +15,18 @@ jobs:
           npm install
       - run: |
           npm run all
+      - run: |
+          npm run test
+        # the secrets below are not availble for pull requests, so let's run
+        # tests only when we're not dealing with a pull request.
+        if: ${{ github.event_name != 'pull_request' }}
         env:
           FTP_SERVER: ${{ secrets.TEST_FTP_SERVER }}
           FTP_USER: ${{ secrets.TEST_FTP_USER }}
           FTP_PASS: ${{ secrets.TEST_FTP_PASSWORD }}
           VERIFY_BASE_URL: ${{ secrets.TEST_VERIFY_BASE_URL }}
   test: # make sure the action works on a clean machine without building
+    if: ${{ github.event_name != 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
