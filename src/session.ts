@@ -30,7 +30,7 @@ interface ResponseBase {
     message: string;
 }
 
-interface ListResponse extends ResponseBase {
+interface ListResponse {
     sPath: string;
     aLines?: ListLine[];
 }
@@ -52,6 +52,10 @@ type ApiAction =
     | 'update_tree_list'
     | 'add_folder'
     | 'remove_file_or_folder';
+
+function isSuccess(resp: ResponseBase): boolean {
+    return resp.result === 'success';
+}
 
 export class Session {
     private readonly jar: CookieJar;
@@ -76,26 +80,35 @@ export class Session {
     public async connect(): Promise<void> {
         // first, let's set the language to English, so we get meaningful
         // messages and errors. Infomaniak by default uses French ;-)
-        const respLang = await this.callApi<ResponseBase>('set_language', {
+        const resp = await this.callApi<ResponseBase>('set_language', {
             lang: 'en_GB',
         });
 
-        core.debug(`set_language result: ${JSON.stringify(respLang.data)}`);
+        core.debug(`set_language result: ${JSON.stringify(resp.data)}`);
+        if (!isSuccess(resp.data)) {
+            core.warning(`set_language failed: ${resp.data.message}`);
+        }
 
         await this.login();
     }
 
     public async addFolder(folderName: string): Promise<void> {
-        const respList = await this.callApi<ResponseBase>('add_folder', {
+        const resp = await this.callApi<ResponseBase>('add_folder', {
             foldername: folderName,
             other: 'fullpath',
         });
 
         core.debug(
             `add_folder result for '${folderName}': ${JSON.stringify(
-                respList.data
+                resp.data
             )}`
         );
+
+        if (!isSuccess(resp.data)) {
+            throw new Error(
+                `addFolder failed for '${folderName}': ${resp.data.message}`
+            );
+        }
     }
 
     public async ensureFolder(folderName: string): Promise<void> {
@@ -132,19 +145,22 @@ export class Session {
     }
 
     public async remove(path: string): Promise<void> {
-        const respList = await this.callApi<ResponseBase>(
-            'remove_file_or_folder',
-            {
-                aPathToRemove: `["${path}"]`,
-                other: 'fullpath',
-            }
-        );
+        const resp = await this.callApi<ResponseBase>('remove_file_or_folder', {
+            aPathToRemove: `["${path}"]`,
+            other: 'fullpath',
+        });
 
         core.debug(
             `remove_file_or_folder result for '${path}': ${JSON.stringify(
-                respList.data
+                resp.data
             )}`
         );
+
+        if (!isSuccess(resp.data)) {
+            throw new Error(
+                `remove failed for '${path}': ${resp.data.message}`
+            );
+        }
     }
 
     public async cd(folderName: string): Promise<ChangeDirResult> {
@@ -242,7 +258,7 @@ export class Session {
             }
         );
 
-        if (resp.data.result !== 'success') {
+        if (!isSuccess(resp.data)) {
             core.error(`login failed: ${JSON.stringify(resp.data)}`);
             throw new Error(`login failed: ${resp.data.message}`);
         }

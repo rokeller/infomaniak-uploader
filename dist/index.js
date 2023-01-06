@@ -126,6 +126,9 @@ const form_data_1 = __importDefault(__nccwpck_require__(4334));
 const http_1 = __nccwpck_require__(5919);
 const crypto_1 = __nccwpck_require__(6417);
 const axios_cookiejar_support_1 = __nccwpck_require__(6426);
+function isSuccess(resp) {
+    return resp.result === 'success';
+}
 class Session {
     constructor(options) {
         this.options = options;
@@ -144,20 +147,26 @@ class Session {
         return __awaiter(this, void 0, void 0, function* () {
             // first, let's set the language to English, so we get meaningful
             // messages and errors. Infomaniak by default uses French ;-)
-            const respLang = yield this.callApi('set_language', {
+            const resp = yield this.callApi('set_language', {
                 lang: 'en_GB',
             });
-            core.debug(`set_language result: ${JSON.stringify(respLang.data)}`);
+            core.debug(`set_language result: ${JSON.stringify(resp.data)}`);
+            if (!isSuccess(resp.data)) {
+                core.warning(`set_language failed: ${resp.data.message}`);
+            }
             yield this.login();
         });
     }
     addFolder(folderName) {
         return __awaiter(this, void 0, void 0, function* () {
-            const respList = yield this.callApi('add_folder', {
+            const resp = yield this.callApi('add_folder', {
                 foldername: folderName,
                 other: 'fullpath',
             });
-            core.debug(`add_folder result for '${folderName}': ${JSON.stringify(respList.data)}`);
+            core.debug(`add_folder result for '${folderName}': ${JSON.stringify(resp.data)}`);
+            if (!isSuccess(resp.data)) {
+                throw new Error(`addFolder failed for '${folderName}': ${resp.data.message}`);
+            }
         });
     }
     ensureFolder(folderName) {
@@ -188,11 +197,14 @@ class Session {
     }
     remove(path) {
         return __awaiter(this, void 0, void 0, function* () {
-            const respList = yield this.callApi('remove_file_or_folder', {
+            const resp = yield this.callApi('remove_file_or_folder', {
                 aPathToRemove: `["${path}"]`,
                 other: 'fullpath',
             });
-            core.debug(`remove_file_or_folder result for '${path}': ${JSON.stringify(respList.data)}`);
+            core.debug(`remove_file_or_folder result for '${path}': ${JSON.stringify(resp.data)}`);
+            if (!isSuccess(resp.data)) {
+                throw new Error(`remove failed for '${path}': ${resp.data.message}`);
+            }
         });
     }
     cd(folderName) {
@@ -274,7 +286,7 @@ class Session {
                 sUser: this.options.username,
                 sPwd: this.options.password,
             });
-            if (resp.data.result !== 'success') {
+            if (!isSuccess(resp.data)) {
                 core.error(`login failed: ${JSON.stringify(resp.data)}`);
                 throw new Error(`login failed: ${resp.data.message}`);
             }
@@ -406,7 +418,10 @@ class Uploader {
                 const uploadResults = yield Promise.all(pendingUploads);
                 for (const uploadResult of uploadResults) {
                     if (!uploadResult.success) {
-                        core.error(`failed to upload file: ${uploadResult.localPath}`);
+                        core.error(`upload '${uploadResult.localPath}' ... failed.`);
+                    }
+                    else {
+                        core.info(`upload '${uploadResult.localPath}' ... success.`);
                     }
                 }
                 // now let's recursively upload the directory's contents too.

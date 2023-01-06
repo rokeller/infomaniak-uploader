@@ -54,7 +54,11 @@ export class Uploader {
             for (const uploadResult of uploadResults) {
                 if (!uploadResult.success) {
                     core.error(
-                        `failed to upload file: ${uploadResult.localPath}`
+                        `upload '${uploadResult.localPath}' ... failed.`
+                    );
+                } else {
+                    core.info(
+                        `upload '${uploadResult.localPath}' ... success.`
                     );
                 }
             }
