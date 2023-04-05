@@ -1,5 +1,14 @@
 <p align="center">
   <a href="https://github.com/rokeller/infomaniak-uploader/actions"><img alt="typescript-action status" src="https://github.com/rokeller/infomaniak-uploader/workflows/build-test/badge.svg"></a>
+  <a href="https://github.com/rokeller/infomaniak-uploader/actions"><img alt="typescript-action status" src="https://github.com/rokeller/infomaniak-uploader/workflows/Check dist%2f/badge.svg"></a>
+  <a href="https://github.com/rokeller/infomaniak-uploader/actions"><img alt="typescript-action status" src="https://github.com/rokeller/infomaniak-uploader/workflows/CodeQL/badge.svg"></a>
+<p>
+<p align="center">
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/rokeller/infomaniak-uploader">
+  <img alt="GitHub issues" src="https://img.shields.io/github/issues-raw/rokeller/infomaniak-uploader">
+  <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr-raw/rokeller/infomaniak-uploader">
+  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/y/rokeller/infomaniak-uploader">
+  <img alt="GitHub" src="https://img.shields.io/github/license/rokeller/infomaniak-uploader">
 </p>
 
 # Upload files to Infomaniak-hosted FTP servers
