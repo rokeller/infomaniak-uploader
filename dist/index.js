@@ -8,7 +8,11 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -87,7 +91,11 @@ run();
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -322,7 +330,11 @@ exports.Session = Session;
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -377,7 +389,7 @@ class Uploader {
         });
     }
     uploadRecursively(localPath, remotePath) {
-        var e_1, _a;
+        var _a, e_1, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const entries = yield (0, promises_1.opendir)(localPath);
@@ -387,20 +399,27 @@ class Uploader {
                     // entries of a directory are in the order in which they're in the inode.
                     // but we want to upload files of the directory first, and only then go
                     // into the subdirectories, because it's more efficient for FTP that way.
-                    for (var entries_1 = __asyncValues(entries), entries_1_1; entries_1_1 = yield entries_1.next(), !entries_1_1.done;) {
-                        const fileOrDir = entries_1_1.value;
-                        if (fileOrDir.isDirectory()) {
-                            dirs.push(fileOrDir.name);
+                    for (var _d = true, entries_1 = __asyncValues(entries), entries_1_1; entries_1_1 = yield entries_1.next(), _a = entries_1_1.done, !_a;) {
+                        _c = entries_1_1.value;
+                        _d = false;
+                        try {
+                            const fileOrDir = _c;
+                            if (fileOrDir.isDirectory()) {
+                                dirs.push(fileOrDir.name);
+                            }
+                            else if (fileOrDir.isFile()) {
+                                files.push(fileOrDir.name);
+                            }
                         }
-                        else if (fileOrDir.isFile()) {
-                            files.push(fileOrDir.name);
+                        finally {
+                            _d = true;
                         }
                     }
                 }
                 catch (e_1_1) { e_1 = { error: e_1_1 }; }
                 finally {
                     try {
-                        if (entries_1_1 && !entries_1_1.done && (_a = entries_1.return)) yield _a.call(entries_1);
+                        if (!_d && !_a && (_b = entries_1.return)) yield _b.call(entries_1);
                     }
                     finally { if (e_1) throw e_1.error; }
                 }
