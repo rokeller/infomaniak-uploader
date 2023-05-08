@@ -34,7 +34,7 @@
     "tough-cookie": "^4.1.2"
   },
   "devDependencies": {
-    "@types/node": "^18.14.2",
+    "@types/node": "^20.1.0",
     "@types/tough-cookie": "^4.0.2",
     "@typescript-eslint/parser": "^5.59.2",
     "@vercel/ncc": "^0.36.1",
