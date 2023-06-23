@@ -27,7 +27,17 @@ test('test runs', async () => {
         env: process.env,
     }
 
-    console.log(cp.execFileSync(np, [ip], options).toString())
+    try {
+        const output = cp.execFileSync(np, [ip], options).toString()
+        console.log('stdout:')
+        console.log(output)
+    } catch (err) {
+        console.log('Error:')
+        console.log('*** stdout:')
+        console.log((err as any).stdout.toString())
+        console.log('*** stderr:')
+        console.log((err as any).stderr.toString())
+    }
 
     const resp = await axios.get<string>(validationUrl);
     expect(resp.data).toBe(testData);
