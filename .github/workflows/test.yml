@@ -4,7 +4,7 @@ on: # rebuild any PRs and main branch changes
   push:
     branches:
       - main
-      - 'releases/*'
+      - 'v*'
 
 jobs:
   build: # make sure build/ci work properly
@@ -17,7 +17,7 @@ jobs:
           npm run all
       - run: |
           npm run test
-        # the secrets below are not availble for pull requests, so let's run
+        # the secrets below are not available for pull requests, so let's run
         # tests only when we're not dealing with a pull request.
         if: ${{ github.event_name != 'pull_request' }}
         env:
