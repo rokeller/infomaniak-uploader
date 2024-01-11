@@ -2674,7 +2674,7 @@ function descending(a, b)
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.wrapper = void 0;
-const http_1 = __nccwpck_require__(5919);
+const http_1 = __nccwpck_require__(9618);
 const AGENT_CREATED_BY_AXIOS_COOKIEJAR_SUPPORT = Symbol('AGENT_CREATED_BY_AXIOS_COOKIEJAR_SUPPORT');
 function requestInterceptor(config) {
     if (!config.jar) {
@@ -2721,6 +2721,537 @@ function wrapper(axios) {
     return axios;
 }
 exports.wrapper = wrapper;
+
+
+/***/ }),
+
+/***/ 8748:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.req = exports.json = exports.toBuffer = void 0;
+const http = __importStar(__nccwpck_require__(3685));
+const https = __importStar(__nccwpck_require__(5687));
+async function toBuffer(stream) {
+    let length = 0;
+    const chunks = [];
+    for await (const chunk of stream) {
+        length += chunk.length;
+        chunks.push(chunk);
+    }
+    return Buffer.concat(chunks, length);
+}
+exports.toBuffer = toBuffer;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function json(stream) {
+    const buf = await toBuffer(stream);
+    const str = buf.toString('utf8');
+    try {
+        return JSON.parse(str);
+    }
+    catch (_err) {
+        const err = _err;
+        err.message += ` (input: ${str})`;
+        throw err;
+    }
+}
+exports.json = json;
+function req(url, opts = {}) {
+    const href = typeof url === 'string' ? url : url.href;
+    const req = (href.startsWith('https:') ? https : http).request(url, opts);
+    const promise = new Promise((resolve, reject) => {
+        req
+            .once('response', resolve)
+            .once('error', reject)
+            .end();
+    });
+    req.then = promise.then.bind(promise);
+    return req;
+}
+exports.req = req;
+//# sourceMappingURL=helpers.js.map
+
+/***/ }),
+
+/***/ 5845:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Agent = void 0;
+const http = __importStar(__nccwpck_require__(3685));
+__exportStar(__nccwpck_require__(8748), exports);
+const INTERNAL = Symbol('AgentBaseInternalState');
+class Agent extends http.Agent {
+    constructor(opts) {
+        super(opts);
+        this[INTERNAL] = {};
+    }
+    /**
+     * Determine whether this is an `http` or `https` request.
+     */
+    isSecureEndpoint(options) {
+        if (options) {
+            // First check the `secureEndpoint` property explicitly, since this
+            // means that a parent `Agent` is "passing through" to this instance.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (typeof options.secureEndpoint === 'boolean') {
+                return options.secureEndpoint;
+            }
+            // If no explicit `secure` endpoint, check if `protocol` property is
+            // set. This will usually be the case since using a full string URL
+            // or `URL` instance should be the most common usage.
+            if (typeof options.protocol === 'string') {
+                return options.protocol === 'https:';
+            }
+        }
+        // Finally, if no `protocol` property was set, then fall back to
+        // checking the stack trace of the current call stack, and try to
+        // detect the "https" module.
+        const { stack } = new Error();
+        if (typeof stack !== 'string')
+            return false;
+        return stack
+            .split('\n')
+            .some((l) => l.indexOf('(https.js:') !== -1 ||
+            l.indexOf('node:https:') !== -1);
+    }
+    createSocket(req, options, cb) {
+        const connectOpts = {
+            ...options,
+            secureEndpoint: this.isSecureEndpoint(options),
+        };
+        Promise.resolve()
+            .then(() => this.connect(req, connectOpts))
+            .then((socket) => {
+            if (socket instanceof http.Agent) {
+                // @ts-expect-error `addRequest()` isn't defined in `@types/node`
+                return socket.addRequest(req, connectOpts);
+            }
+            this[INTERNAL].currentSocket = socket;
+            // @ts-expect-error `createSocket()` isn't defined in `@types/node`
+            super.createSocket(req, options, cb);
+        }, cb);
+    }
+    createConnection() {
+        const socket = this[INTERNAL].currentSocket;
+        this[INTERNAL].currentSocket = undefined;
+        if (!socket) {
+            throw new Error('No socket was returned in the `connect()` function');
+        }
+        return socket;
+    }
+    get defaultPort() {
+        return (this[INTERNAL].defaultPort ??
+            (this.protocol === 'https:' ? 443 : 80));
+    }
+    set defaultPort(v) {
+        if (this[INTERNAL]) {
+            this[INTERNAL].defaultPort = v;
+        }
+    }
+    get protocol() {
+        return (this[INTERNAL].protocol ??
+            (this.isSecureEndpoint() ? 'https:' : 'http:'));
+    }
+    set protocol(v) {
+        if (this[INTERNAL]) {
+            this[INTERNAL].protocol = v;
+        }
+    }
+}
+exports.Agent = Agent;
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ 6365:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.createCookieAgent = createCookieAgent;
+var _nodeUrl = _interopRequireDefault(__nccwpck_require__(1041));
+var _create_cookie_header_value = __nccwpck_require__(3620);
+var _save_cookies_from_header = __nccwpck_require__(42);
+var _validate_cookie_options = __nccwpck_require__(6105);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+const kCookieOptions = Symbol('cookieOptions');
+const kReimplicitHeader = Symbol('reimplicitHeader');
+const kRecreateFirstChunk = Symbol('recreateFirstChunk');
+const kOverrideRequest = Symbol('overrideRequest');
+function createCookieAgent(BaseAgentClass) {
+  // @ts-expect-error ...
+  class CookieAgent extends BaseAgentClass {
+    constructor(...params) {
+      const {
+        cookies: cookieOptions
+      } = params.find(opt => {
+        return opt != null && typeof opt === 'object' && 'cookies' in opt;
+      }) ?? {};
+      super(...params);
+      if (cookieOptions) {
+        (0, _validate_cookie_options.validateCookieOptions)(cookieOptions);
+      }
+      this[kCookieOptions] = cookieOptions;
+    }
+    [kReimplicitHeader](req) {
+      const _headerSent = req._headerSent;
+      req._header = null;
+      req._implicitHeader();
+      req._headerSent = _headerSent;
+    }
+    [kRecreateFirstChunk](req) {
+      const firstChunk = req.outputData[0];
+      if (req._header == null || firstChunk == null) {
+        return;
+      }
+      const prevData = firstChunk.data;
+      const prevHeaderLength = prevData.indexOf('\r\n\r\n');
+      if (prevHeaderLength === -1) {
+        firstChunk.data = req._header;
+      } else {
+        firstChunk.data = `${req._header}${prevData.slice(prevHeaderLength + 4)}`;
+      }
+      const diffSize = firstChunk.data.length - prevData.length;
+      req.outputSize += diffSize;
+      req._onPendingData(diffSize);
+    }
+    [kOverrideRequest](req, requestUrl, cookieOptions) {
+      const _implicitHeader = req._implicitHeader.bind(req);
+      req._implicitHeader = () => {
+        try {
+          const cookieHeader = (0, _create_cookie_header_value.createCookieHeaderValue)({
+            cookieOptions,
+            passedValues: [req.getHeader('Cookie')].flat(),
+            requestUrl
+          });
+          if (cookieHeader) {
+            req.setHeader('Cookie', cookieHeader);
+          }
+        } catch (err) {
+          req.destroy(err);
+          return;
+        }
+        return _implicitHeader();
+      };
+      const emit = req.emit.bind(req);
+      req.emit = (event, ...args) => {
+        if (event === 'response') {
+          try {
+            const res = args[0];
+            (0, _save_cookies_from_header.saveCookiesFromHeader)({
+              cookieOptions,
+              cookies: res.headers['set-cookie'],
+              requestUrl
+            });
+          } catch (err) {
+            req.destroy(err);
+            return false;
+          }
+        }
+        return emit(event, ...args);
+      };
+    }
+    addRequest(req, options) {
+      const cookieOptions = this[kCookieOptions];
+      if (cookieOptions) {
+        try {
+          const requestUrl = _nodeUrl.default.format({
+            host: req.host,
+            pathname: req.path,
+            protocol: req.protocol
+          });
+          this[kOverrideRequest](req, requestUrl, cookieOptions);
+          if (req._header != null) {
+            this[kReimplicitHeader](req);
+          }
+          if (req._headerSent) {
+            this[kRecreateFirstChunk](req);
+          }
+        } catch (err) {
+          req.destroy(err);
+          return;
+        }
+      }
+      return super.addRequest(req, options);
+    }
+  }
+  return CookieAgent;
+}
+
+/***/ }),
+
+/***/ 4827:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.HttpCookieAgent = void 0;
+var _nodeHttp = _interopRequireDefault(__nccwpck_require__(8849));
+var _create_cookie_agent = __nccwpck_require__(6365);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+const HttpCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttp.default.Agent);
+exports.HttpCookieAgent = HttpCookieAgent;
+
+/***/ }),
+
+/***/ 9814:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.HttpsCookieAgent = void 0;
+var _nodeHttps = _interopRequireDefault(__nccwpck_require__(2286));
+var _create_cookie_agent = __nccwpck_require__(6365);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+const HttpsCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttps.default.Agent);
+exports.HttpsCookieAgent = HttpsCookieAgent;
+
+/***/ }),
+
+/***/ 3392:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "HttpCookieAgent", ({
+  enumerable: true,
+  get: function () {
+    return _http_cookie_agent.HttpCookieAgent;
+  }
+}));
+Object.defineProperty(exports, "HttpsCookieAgent", ({
+  enumerable: true,
+  get: function () {
+    return _https_cookie_agent.HttpsCookieAgent;
+  }
+}));
+Object.defineProperty(exports, "MixedCookieAgent", ({
+  enumerable: true,
+  get: function () {
+    return _mixed_cookie_agent.MixedCookieAgent;
+  }
+}));
+Object.defineProperty(exports, "createCookieAgent", ({
+  enumerable: true,
+  get: function () {
+    return _create_cookie_agent.createCookieAgent;
+  }
+}));
+var _create_cookie_agent = __nccwpck_require__(6365);
+var _http_cookie_agent = __nccwpck_require__(4827);
+var _https_cookie_agent = __nccwpck_require__(9814);
+var _mixed_cookie_agent = __nccwpck_require__(1852);
+
+/***/ }),
+
+/***/ 1852:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.MixedCookieAgent = void 0;
+var _agentBase = __nccwpck_require__(5845);
+var _http_cookie_agent = __nccwpck_require__(4827);
+var _https_cookie_agent = __nccwpck_require__(9814);
+class MixedCookieAgent extends _agentBase.Agent {
+  constructor(options) {
+    super();
+    this._httpAgent = new _http_cookie_agent.HttpCookieAgent(options);
+    this._httpsAgent = new _https_cookie_agent.HttpsCookieAgent(options);
+  }
+  connect(_req, options) {
+    return options.secureEndpoint ? this._httpsAgent : this._httpAgent;
+  }
+}
+exports.MixedCookieAgent = MixedCookieAgent;
+
+/***/ }),
+
+/***/ 3620:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.createCookieHeaderValue = createCookieHeaderValue;
+var _toughCookie = __nccwpck_require__(7372);
+function createCookieHeaderValue({
+  cookieOptions,
+  passedValues,
+  requestUrl
+}) {
+  const {
+    async_UNSTABLE = false,
+    jar
+  } = cookieOptions;
+  const getCookiesSync = async_UNSTABLE ?
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  __nccwpck_require__(3558)(jar.getCookies.bind(jar)) : jar.getCookiesSync.bind(jar);
+  const cookies = getCookiesSync(requestUrl);
+  const cookiesMap = new Map(cookies.map(cookie => [cookie.key, cookie]));
+  for (const passedValue of passedValues) {
+    if (typeof passedValue !== 'string') {
+      continue;
+    }
+    for (const str of passedValue.split(';')) {
+      const cookie = _toughCookie.Cookie.parse(str.trim());
+      if (cookie != null) {
+        cookiesMap.set(cookie.key, cookie);
+      }
+    }
+  }
+  const cookieHeaderValue = Array.from(cookiesMap.values()).map(cookie => cookie.cookieString()).join(';\x20');
+  return cookieHeaderValue;
+}
+
+/***/ }),
+
+/***/ 42:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.saveCookiesFromHeader = saveCookiesFromHeader;
+function saveCookiesFromHeader({
+  cookieOptions,
+  cookies,
+  requestUrl
+}) {
+  const {
+    async_UNSTABLE = false,
+    jar
+  } = cookieOptions;
+  const setCookieSync = async_UNSTABLE ?
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  __nccwpck_require__(3558)(jar.setCookie.bind(jar)) : jar.setCookieSync.bind(jar);
+  for (const cookie of [cookies].flat()) {
+    if (cookie == null) {
+      continue;
+    }
+    setCookieSync(cookie, requestUrl, {
+      ignoreError: true
+    });
+  }
+}
+
+/***/ }),
+
+/***/ 6105:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.validateCookieOptions = validateCookieOptions;
+function validateCookieOptions(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+opts, resolver = require.resolve) {
+  if (!('jar' in opts)) {
+    throw new TypeError('invalid cookies.jar');
+  }
+  if (opts.async_UNSTABLE) {
+    try {
+      resolver('deasync');
+    } catch (_err) {
+      throw new Error('you should install deasync library when cookies.async_UNSTABLE is true.');
+    }
+  } else {
+    if (!opts.jar.store.synchronous) {
+      throw new TypeError('you should set cookies.async_UNSTABLE to true for using the asynchronous cookie store.');
+    }
+  }
+}
+
+/***/ }),
+
+/***/ 9618:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = __nccwpck_require__(3392);
 
 
 /***/ }),
@@ -5273,8 +5804,7 @@ exports.HttpCookieAgent = void 0;
 var _nodeHttp = _interopRequireDefault(__nccwpck_require__(8849));
 var _create_cookie_agent = __nccwpck_require__(6784);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-const HttpCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttp.default.Agent);
-exports.HttpCookieAgent = HttpCookieAgent;
+const HttpCookieAgent = exports.HttpCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttp.default.Agent);
 
 /***/ }),
 
@@ -5291,8 +5821,7 @@ exports.HttpsCookieAgent = void 0;
 var _nodeHttps = _interopRequireDefault(__nccwpck_require__(2286));
 var _create_cookie_agent = __nccwpck_require__(6784);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-const HttpsCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttps.default.Agent);
-exports.HttpsCookieAgent = HttpsCookieAgent;
+const HttpsCookieAgent = exports.HttpsCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttps.default.Agent);
 
 /***/ }),
 
