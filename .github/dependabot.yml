@@ -4,8 +4,12 @@ updates:
     directory: /
     schedule:
       interval: daily
+      time: "05:40"
+      timezone: Europe/Zurich
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
+      time: "05:40"
+      timezone: Europe/Zurich
