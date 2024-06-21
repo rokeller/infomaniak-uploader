@@ -31,12 +31,13 @@ test('test runs', async () => {
         const output = cp.execFileSync(np, [ip], options).toString()
         console.log('stdout:')
         console.log(output)
-    } catch (err) {
+    } catch (err: unknown) {
+        const spawnErr = err as cp.SpawnSyncReturns<Buffer>;
         console.log('Error:')
         console.log('*** stdout:')
-        console.log((err as any).stdout.toString())
+        console.log(spawnErr.stdout.toString())
         console.log('*** stderr:')
-        console.log((err as any).stderr.toString())
+        console.log(spawnErr.stderr.toString())
     }
 
     const resp = await axios.get<string>(validationUrl);

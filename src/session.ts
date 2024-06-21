@@ -209,7 +209,7 @@ export class Session {
             qqfilename: fileName,
             qquuid: uuid,
             qqfile: fileName,
-        } as {});
+        } as NonNullable<unknown>);
         const form = new FormData({ maxDataSize: 2000000 });
 
         form.append('qqfile', await readFile(localPath), {
@@ -268,8 +268,8 @@ export class Session {
 
     private async callApi<T>(
         action: ApiAction,
-        parameters: {}
-    ): Promise<AxiosResponse<T, {}>> {
+        parameters: NonNullable<unknown>
+    ): Promise<AxiosResponse<T, NonNullable<unknown>>> {
         return await this.postFormData<T>('/ftp/ajax/api.php', {
             ...parameters,
             action,
@@ -278,8 +278,8 @@ export class Session {
 
     private async postFormData<T>(
         endpoint: string,
-        data: {}
-    ): Promise<AxiosResponse<T, {}>> {
+        data: NonNullable<unknown>
+    ): Promise<AxiosResponse<T, NonNullable<unknown>>> {
         const params = new URLSearchParams(data);
 
         return await this.axios.post<T>(endpoint, params.toString(), {
