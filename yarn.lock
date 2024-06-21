@@ -2307,14 +2307,7 @@ html-escaper@^2.0.0:
   resolved "https://registry.yarnpkg.com/html-escaper/-/html-escaper-2.0.2.tgz#dfd60027da36a36dfcbe236262c00a5822681453"
   integrity sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==
 
-http-cookie-agent@6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/http-cookie-agent/-/http-cookie-agent-6.0.3.tgz#21a7bafb8dc9b9960e6fd7c67d20aacf64f68eeb"
-  integrity sha512-6JdymEgWgsg9VQ5VN9FGpRRcivyu4WdM0Ud3kW+Q0PB7knt0EFtlhNPU8wCuscXLfIEI5y6jEMdFTBODNsJR6g==
-  dependencies:
-    agent-base "^7.1.1"
-
-http-cookie-agent@^6.0.5:
+http-cookie-agent@6.0.5, http-cookie-agent@^6.0.5:
   version "6.0.5"
   resolved "https://registry.yarnpkg.com/http-cookie-agent/-/http-cookie-agent-6.0.5.tgz#23b490439464424a689d80ea7f3a560a4a893ab8"
   integrity sha512-sfZ8fDgDP3B1YB+teqSnAK1aPgBu8reUUGxSsndP2XnYN6cM29EURXWXZqQQiaRdor3B4QjpkUNfv21syaO4DA==
