@@ -67,10 +67,16 @@ function run() {
                 password: ftpPassword,
             });
             const uploader = new uploader_1.Uploader(localRoot, remoteRoot, session);
-            core.debug('Starting upload ...');
-            core.debug(new Date().toTimeString());
+            core.info('Starting upload ...');
+            const start = new Date();
+            core.debug(start.toTimeString());
             yield uploader.upload();
-            core.debug(new Date().toTimeString());
+            const end = new Date();
+            core.debug(end.toTimeString());
+            const durationMs = end.valueOf() - start.valueOf();
+            core.info(`Upload finished in ${Math.round(durationMs / 100) / 10} sec`);
+            // Get the quota again to show stats after upload.
+            session.cd('/');
         }
         catch (error) {
             if (error instanceof Error) {
@@ -136,6 +142,18 @@ const crypto_1 = __nccwpck_require__(6113);
 const axios_cookiejar_support_1 = __nccwpck_require__(6426);
 function isSuccess(resp) {
     return resp.result === 'success';
+}
+function translateQuota(q) {
+    if (undefined === q) {
+        return q;
+    }
+    const matcher = /(M|K)o/gi;
+    return {
+        pourcent: q.pourcent,
+        pourcent_free: q.pourcent_free,
+        used: q.used.replace(matcher, '$1B'),
+        total: q.total.replace(matcher, '$1B'),
+    };
 }
 class Session {
     constructor(options) {
@@ -216,7 +234,7 @@ class Session {
         });
     }
     cd(folderName) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             let pathSegments = folderName.replace(/^\/|\/$/gi, '').split(/\//gi);
             if (pathSegments.length === 1 && pathSegments[0] === '') {
@@ -236,6 +254,12 @@ class Session {
                 subDirs: directories || [],
             };
             core.debug(`update_tree_list result for '${folderName}': ${JSON.stringify(resp.data)}`);
+            if (folderName === '/') {
+                const quota = translateQuota((_b = resp.data.aQuotas) === null || _b === void 0 ? void 0 : _b.site);
+                if (undefined !== quota) {
+                    core.info(`Quota: used ${quota.used} (${quota.pourcent}%) of ${quota.total} total, ${quota.pourcent_free}% free.`);
+                }
+            }
             return res;
         });
     }
