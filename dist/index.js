@@ -147,6 +147,10 @@ function translateQuota(q) {
     if (undefined === q) {
         return q;
     }
+    // Infomaniak being a mostly French speaking company, they have a weird
+    // interface where they use some French terms, and French units for sizes:
+    // "Mo" == "mégaoctet" => "million octects" => "million bytes"
+    // "Ko" == "kilooctet" => "thousand octects" => "thousand bytes"
     const matcher = /(M|K)o/gi;
     return {
         pourcent: q.pourcent,
