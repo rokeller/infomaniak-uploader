@@ -29,10 +29,16 @@ async function run(): Promise<void> {
         });
         const uploader = new Uploader(localRoot, remoteRoot, session);
 
-        core.debug('Starting upload ...');
-        core.debug(new Date().toTimeString());
+        core.info('Starting upload ...');
+        const start = new Date();
+        core.debug(start.toTimeString());
         await uploader.upload();
-        core.debug(new Date().toTimeString());
+        const end = new Date();
+        core.debug(end.toTimeString());
+        const durationMs = end.valueOf() - start.valueOf();
+        core.info(`Upload finished in ${Math.round(durationMs / 100) / 10} sec`)
+        // Get the quota again to show stats after upload.
+        session.cd('/');
     } catch (error) {
         if (error instanceof Error) {
             core.setFailed(error.message);

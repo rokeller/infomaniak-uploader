@@ -33,6 +33,19 @@ interface ResponseBase {
 interface ListResponse {
     sPath: string;
     aLines?: ListLine[];
+    aQuotas?: Quotas;
+}
+
+interface Quotas {
+    site?: Quota;
+    user?: Quota;
+}
+
+interface Quota {
+    pourcent: number;
+    pourcent_free: number;
+    used: string;
+    total: string
 }
 
 interface ListLine {
@@ -55,6 +68,24 @@ type ApiAction =
 
 function isSuccess(resp: ResponseBase): boolean {
     return resp.result === 'success';
+}
+
+function translateQuota(q?: Quota): Quota | undefined {
+    if (undefined === q) {
+        return q;
+    }
+
+    // Infomaniak being a mostly French speaking company, they have a weird
+    // interface where they use some French terms, and French units for sizes:
+    // "Mo" == "mégaoctet" => "million octects" => "million bytes"
+    // "Ko" == "kilooctet" => "thousand octects" => "thousand bytes"
+    const matcher = /(M|K)o/gi;
+    return {
+        pourcent: q.pourcent,
+        pourcent_free: q.pourcent_free,
+        used: q.used.replace(matcher, '$1B'),
+        total: q.total.replace(matcher, '$1B'),
+    };
 }
 
 export class Session {
@@ -189,6 +220,13 @@ export class Session {
                 resp.data
             )}`
         );
+
+        if (folderName === '/') {
+            const quota = translateQuota(resp.data.aQuotas?.site);
+            if (undefined !== quota) {
+                core.info(`Quota: used ${quota.used} (${quota.pourcent}%) of ${quota.total} total, ${quota.pourcent_free}% free.`);
+            }
+        }
 
         return res;
     }
