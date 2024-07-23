@@ -23,7 +23,7 @@ Manager to upload files from GitHub workflows.
 ## Usage
 
 ```yaml
-- uses: rokeller/infomaniak-uploader@v1.0
+- uses: rokeller/infomaniak-uploader@v1
   with:
     # (Required) The domain name of the FTP server for which to upload the files.
     ftpServer: 'my-domain.com'
