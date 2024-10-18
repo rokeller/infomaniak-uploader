@@ -2769,7 +2769,7 @@ function descending(a, b)
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.wrapper = void 0;
+exports.wrapper = wrapper;
 const http_1 = __nccwpck_require__(1110);
 const AGENT_CREATED_BY_AXIOS_COOKIEJAR_SUPPORT = Symbol('AGENT_CREATED_BY_AXIOS_COOKIEJAR_SUPPORT');
 function requestInterceptor(config) {
@@ -2818,7 +2818,6 @@ function wrapper(axios) {
     }
     return axios;
 }
-exports.wrapper = wrapper;
 
 
 /***/ }),
