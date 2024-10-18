@@ -1082,12 +1082,12 @@ axe-core@^4.9.1:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.9.1.tgz#fcd0f4496dad09e0c899b44f6c4bb7848da912ae"
   integrity sha512-QbUdXJVTpvUTHU7871ppZkdOLBeGUKBQWHkHrvN2V9IQWGMt61zf3B45BtzjxEJzYuj0JBjBZP/hmYS/R9pmAw==
 
-axios-cookiejar-support@^5.0.1:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/axios-cookiejar-support/-/axios-cookiejar-support-5.0.2.tgz#30bbe104a707d889f530e0cf2375398f5851dbaa"
-  integrity sha512-4KwFqiH62Ry/J+ue1NwqLvBSaK3Bp/Owc9jTe7BS9c22uN8/4MB5pY7HV9QwQjV3ZRonCoSj5V8Pjx911qQqAw==
+axios-cookiejar-support@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/axios-cookiejar-support/-/axios-cookiejar-support-5.0.3.tgz#8808cc5f8306edc70a86f964662bb9b59d739f92"
+  integrity sha512-nYbMJ9ZVbV4CMgLOritOvC95oshEO6yTFFRucdhg98OtxjieGl5G12V2r/JZ9/ReFOWjRO+xQjXLQ/FzoXt6Zw==
   dependencies:
-    http-cookie-agent "^6.0.5"
+    http-cookie-agent "^6.0.6"
 
 axios@^1.7.7:
   version "1.7.7"
@@ -2309,7 +2309,7 @@ html-escaper@^2.0.0:
   resolved "https://registry.yarnpkg.com/html-escaper/-/html-escaper-2.0.2.tgz#dfd60027da36a36dfcbe236262c00a5822681453"
   integrity sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==
 
-http-cookie-agent@6.0.6, http-cookie-agent@^6.0.5:
+http-cookie-agent@6.0.6, http-cookie-agent@^6.0.6:
   version "6.0.6"
   resolved "https://registry.yarnpkg.com/http-cookie-agent/-/http-cookie-agent-6.0.6.tgz#4d37848c045ea8e6fced1b97d3cda282f06e1a27"
   integrity sha512-XkwhYUWo0yhiHBWqLmAe2kIBymVY70ewi9sKmy6YBHpNU3BCH4nipKrtY5/effAxj0qneQ9ziZG5TXgaKLfYgg==
