@@ -16,11 +16,13 @@ inputs:
     required: true
   remoteRoot:
     description: 'path to the remote folder (on the FTP server) to upload to'
-    required: true
+    required: false
     default: '/'
   cleanupDirs:
     description: 'directories to clean up (remove old files) after upload'
     required: false
+
+# see https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions
 
 runs:
   using: 'node20'
