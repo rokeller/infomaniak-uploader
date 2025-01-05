@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import { Cleaner } from './cleaner';
 import { Session } from './session';
 import { Uploader } from './uploader';
 
@@ -21,22 +22,33 @@ async function run(): Promise<void> {
             trimWhitespace: true,
         });
 
+        const cleanupDirs = core.getMultilineInput('cleanupDirs', {
+            required: false,
+            trimWhitespace: true,
+        });
+
         const session = new Session({
             baseUrl: 'https://manager.infomaniak.com',
             server: ftpServer,
             username: ftpUser,
             password: ftpPassword,
         });
+        const cleaner = new Cleaner(cleanupDirs, session);
         const uploader = new Uploader(localRoot, remoteRoot, session);
 
         core.info('Starting upload ...');
         const start = new Date();
         core.debug(start.toTimeString());
+
         await uploader.upload();
+        await cleaner.cleanup();
+
         const end = new Date();
         core.debug(end.toTimeString());
         const durationMs = end.valueOf() - start.valueOf();
-        core.info(`Upload finished in ${Math.round(durationMs / 100) / 10} sec`)
+        core.info(
+            `Upload finished in ${Math.round(durationMs / 100) / 10} sec`
+        );
         // Get the quota again to show stats after upload.
         session.cd('/');
     } catch (error) {

@@ -1,11 +1,11 @@
 import * as core from '@actions/core';
-import { Cookie, CookieJar } from 'tough-cookie';
 import axios, { Axios, AxiosResponse } from 'axios';
-import { readFile, stat } from 'fs/promises';
-import FormData from 'form-data';
-import { HttpsCookieAgent } from 'http-cookie-agent/http';
-import { randomUUID } from 'crypto';
 import { wrapper } from 'axios-cookiejar-support';
+import { randomUUID } from 'crypto';
+import FormData from 'form-data';
+import { readFile, stat } from 'fs/promises';
+import { HttpsCookieAgent } from 'http-cookie-agent/http';
+import { Cookie, CookieJar } from 'tough-cookie';
 
 export interface SessionOptions {
     baseUrl: string;
@@ -20,9 +20,23 @@ export interface ChangeDirResult {
     subDirs: string[];
 }
 
+export interface ListResult {
+    success: boolean;
+    currentDir: string;
+    entries: DirEntry[];
+}
+
+export interface DirEntry {
+    type: 'file' | 'folder';
+    name: string;
+}
+
 export interface UploadResult {
     success: boolean;
+    currentDir: string;
+    filename: string;
     localPath: string;
+    remotePath: string;
 }
 
 interface ResponseBase {
@@ -30,10 +44,15 @@ interface ResponseBase {
     message: string;
 }
 
-interface ListResponse {
+interface ListDirsResponse {
     sPath: string;
-    aLines?: ListLine[];
+    aLines?: DirsListingLine[];
     aQuotas?: Quotas;
+}
+
+interface ListContentsResponse {
+    aLines?: ContentsListingLine[];
+    numberOfRows?: number;
 }
 
 interface Quotas {
@@ -45,13 +64,20 @@ interface Quota {
     pourcent: number;
     pourcent_free: number;
     used: string;
-    total: string
+    total: string;
 }
 
-interface ListLine {
+interface DirsListingLine {
     sName: string;
     writable: boolean;
     renameable: boolean;
+}
+
+interface ContentsListingLine {
+    sName?: string;
+    sDefaultSize: number; // size in bytes
+    sTimestamp: number; // seconds since Unix epoch
+    type: 'file' | 'folder';
 }
 
 interface UploadResponse extends ResponseBase {
@@ -60,11 +86,12 @@ interface UploadResponse extends ResponseBase {
     uploadName: string;
 }
 
-type ApiAction =
+type LowLevelApiAction =
     | 'set_language'
     | 'update_tree_list'
     | 'add_folder'
-    | 'remove_file_or_folder';
+    | 'remove_file_or_folder'
+    | 'loadFolderSelected';
 
 function isSuccess(resp: ResponseBase): boolean {
     return resp.result === 'success';
@@ -88,9 +115,26 @@ function translateQuota(q?: Quota): Quota | undefined {
     };
 }
 
-export class Session {
+interface ISession {
+    connect(): Promise<void>;
+    addFolder(folderName: string): Promise<void>;
+    ensureFolder(folderName: string): Promise<void>;
+    remove(paths: string[]): Promise<void>;
+    cd(folderName: string): Promise<ChangeDirResult>;
+    ls(): Promise<ListResult>;
+    upload(localPath: string): Promise<UploadResult>;
+}
+
+type SessionApis = keyof ISession;
+
+export class Session implements ISession {
     private readonly jar: CookieJar;
     private readonly axios: Axios;
+    private currentDir: string = '/';
+
+    // TODO: find a better way to describe per-API arguments and results.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+    private apiEventListeners: Map<SessionApis, Function[]> = new Map();
 
     constructor(private readonly options: SessionOptions) {
         this.jar = new CookieJar();
@@ -106,6 +150,13 @@ export class Session {
                 withCredentials: true,
             })
         );
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+    public subscribeApiResult(api: SessionApis, handler: Function) {
+        const handlers = this.apiEventListeners.get(api) || [];
+        handlers.push(handler);
+        this.apiEventListeners.set(api, handlers);
     }
 
     public async connect(): Promise<void> {
@@ -175,21 +226,21 @@ export class Session {
         }
     }
 
-    public async remove(path: string): Promise<void> {
+    public async remove(paths: string[]): Promise<void> {
+        const pathsToRemove = JSON.stringify(paths);
         const resp = await this.callApi<ResponseBase>('remove_file_or_folder', {
-            aPathToRemove: `["${path}"]`,
-            other: 'fullpath',
+            aPathToRemove: pathsToRemove,
         });
 
         core.debug(
-            `remove_file_or_folder result for '${path}': ${JSON.stringify(
+            `remove_file_or_folder result for '${pathsToRemove}': ${JSON.stringify(
                 resp.data
             )}`
         );
 
         if (!isSuccess(resp.data)) {
             throw new Error(
-                `remove failed for '${path}': ${resp.data.message}`
+                `remove failed for '${pathsToRemove}': ${resp.data.message}`
             );
         }
     }
@@ -201,7 +252,7 @@ export class Session {
         }
         const jsPath = JSON.stringify(pathSegments);
 
-        const resp = await this.callApi<ListResponse>('update_tree_list', {
+        const resp = await this.callApi<ListDirsResponse>('update_tree_list', {
             iFrom: 0,
             jsPath,
         });
@@ -214,6 +265,7 @@ export class Session {
             currentDir: resp.data.sPath,
             subDirs: directories || [],
         };
+        this.currentDir = res.currentDir;
 
         core.debug(
             `update_tree_list result for '${folderName}': ${JSON.stringify(
@@ -224,16 +276,58 @@ export class Session {
         if (folderName === '/') {
             const quota = translateQuota(resp.data.aQuotas?.site);
             if (undefined !== quota) {
-                core.info(`Quota: used ${quota.used} (${quota.pourcent}%) of ${quota.total} total, ${quota.pourcent_free}% free.`);
+                core.info(
+                    `Quota: used ${quota.used} (${quota.pourcent}%) of ${quota.total} total, ${quota.pourcent_free}% free.`
+                );
             }
         }
+
+        try {
+            await this.notifyApiEventListeners('cd', folderName, res);
+        } catch (e) {
+            core.warning(`cd listener notification failed: ${e}`);
+        }
+
+        return res;
+    }
+
+    public async ls(): Promise<ListResult> {
+        const resp = await this.callApi<ListContentsResponse>(
+            'loadFolderSelected',
+            {
+                iOffset: 0,
+                iCount: 9999,
+                sSortOrder: '',
+                sSort: 'none',
+                sSearch: '',
+            }
+        );
+
+        const entries: DirEntry[] =
+            resp.data.aLines
+                ?.filter(entry => entry.sName !== undefined)
+                .map(line => ({
+                    type: line.type,
+                    name: line.sName!,
+                })) || [];
+        const res: ListResult = {
+            success: true,
+            currentDir: this.currentDir,
+            entries,
+        };
+
+        core.debug(
+            `loadFolderSelected result for '${this.currentDir}': ${JSON.stringify(
+                resp.data
+            )}`
+        );
 
         return res;
     }
 
     public async upload(localPath: string): Promise<UploadResult> {
         const segments = localPath.split(/\//gi);
-        const fileName = segments.at(-1);
+        const fileName = segments.at(-1)!;
         const fileStat = await stat(localPath);
         const fileSize = fileStat.size;
         const uuid = randomUUID();
@@ -279,8 +373,17 @@ export class Session {
         );
         const res: UploadResult = {
             success: resp.data.success,
+            currentDir: this.currentDir,
+            filename: fileName,
             localPath,
+            remotePath: this.currentDir + fileName,
         };
+
+        try {
+            await this.notifyApiEventListeners('upload', localPath, res);
+        } catch (e) {
+            core.warning(`upload listener notification failed: ${e}`);
+        }
 
         return res;
     }
@@ -305,13 +408,14 @@ export class Session {
     }
 
     private async callApi<T>(
-        action: ApiAction,
+        action: LowLevelApiAction,
         parameters: NonNullable<unknown>
     ): Promise<AxiosResponse<T, NonNullable<unknown>>> {
-        return await this.postFormData<T>('/ftp/ajax/api.php', {
+        const req = {
             ...parameters,
             action,
-        });
+        };
+        return await this.postFormData<T>('/ftp/ajax/api.php', req);
     }
 
     private async postFormData<T>(
@@ -326,5 +430,19 @@ export class Session {
             },
             responseType: 'json',
         });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private async notifyApiEventListeners<KApi extends SessionApis, A extends any[]>(
+        api: KApi,
+        ...args: A
+    ) {
+        const listeners = this.apiEventListeners.get(api);
+        if (listeners && listeners.length > 0) {
+            for (let i = 0; i < listeners.length; i++) {
+                const listener = listeners[i];
+                await listener.call(null, ...args);
+            }
+        }
     }
 }

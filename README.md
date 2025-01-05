@@ -43,6 +43,18 @@ Manager to upload files from GitHub workflows.
 
     # (Optional) The path on the FTP server to upload to. Defaults to '/'
     remoteRoot: '/about'
+
+    # (Optional) The set of paths to directories (from the remote root) to clean
+    #            up if and only if the directory had any files uploaded. Use one
+    #            line per directory.
+    #            This can be particularly useful e.g. for assets directories with
+    #            asset files being generated during build time using hashes, like
+    #            'index-DSUpa6hk.js' or 'index-IWvhMyfN.css'. These old files,
+    #            if not periodically removed, accumulate and will likely never
+    #            be used anymore.
+    cleanupDirs: |-
+      /path/to/directory/to/cleanup
+      /path/to/another/directory
 ```
 
 **Important**: Uploading files with > 2 000 000 byte is not currently supported.
