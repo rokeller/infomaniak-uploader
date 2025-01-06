@@ -1,6 +1,119 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 8230:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Cleaner = void 0;
+const core = __importStar(__nccwpck_require__(7484));
+function trimTrailingSlashes(path) {
+    return path.replace(/\/+$/gi, '');
+}
+class Cleaner {
+    constructor(dirs, session) {
+        this.session = session;
+        this.cleanupDirsItemsToRemove = new Map();
+        session.subscribeApiResult('cd', this.onCd.bind(this));
+        session.subscribeApiResult('upload', this.onUpload.bind(this));
+        dirs.forEach(dir => {
+            this.cleanupDirsItemsToRemove.set(trimTrailingSlashes(dir), {});
+        });
+    }
+    cleanup() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const paths = [...this.cleanupDirsItemsToRemove.keys()];
+            for (let i = 0; i < paths.length; i++) {
+                const path = paths[i];
+                const contents = this.cleanupDirsItemsToRemove.get(path);
+                if (!contents || !contents.entries || !contents.hasUploads) {
+                    // we didn't observe / touch on this directory, so let's leave
+                    // its contents as-is.
+                    continue;
+                }
+                yield this.cleanupDirectory(path, contents.entries);
+            }
+        });
+    }
+    cleanupDirectory(path, snapshot) {
+        return __awaiter(this, void 0, void 0, function* () {
+            core.info(`cleaning up directory '${path}' ...`);
+            const itemsToRemove = [...snapshot.keys()];
+            core.debug(`entries to remove: ${itemsToRemove.join('|')}`);
+            if (itemsToRemove.length > 0) {
+                yield this.session.cd(path);
+                yield this.session.remove(itemsToRemove);
+            }
+        });
+    }
+    onCd(_folderName, result) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const mapEntry = this.cleanupDirsItemsToRemove.get(result.currentDir);
+            if (mapEntry === undefined || mapEntry.entries !== undefined) {
+                // we don't need to cleanup the directory, or we already have the
+                // initial snapshot of files.
+                return;
+            }
+            // let's get a snapshot of the files in the directory.
+            const res = yield this.session.ls();
+            const entriesMap = new Map(res.entries
+                .filter(entry => entry.type === 'file')
+                .map(entry => [entry.name, entry]));
+            this.cleanupDirsItemsToRemove.set(result.currentDir, {
+                entries: entriesMap,
+            });
+        });
+    }
+    onUpload(_localPath, result) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const mapEntry = this.cleanupDirsItemsToRemove.get(result.currentDir);
+            if (mapEntry === undefined || mapEntry.entries === undefined) {
+                return;
+            }
+            mapEntry.hasUploads = true;
+            mapEntry.entries.delete(result.filename);
+        });
+    }
+}
+exports.Cleaner = Cleaner;
+
+
+/***/ }),
+
 /***/ 5915:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -40,6 +153,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
+const cleaner_1 = __nccwpck_require__(8230);
 const session_1 = __nccwpck_require__(4168);
 const uploader_1 = __nccwpck_require__(3764);
 function run() {
@@ -60,17 +174,23 @@ function run() {
                 required: false,
                 trimWhitespace: true,
             });
+            const cleanupDirs = core.getMultilineInput('cleanupDirs', {
+                required: false,
+                trimWhitespace: true,
+            });
             const session = new session_1.Session({
                 baseUrl: 'https://manager.infomaniak.com',
                 server: ftpServer,
                 username: ftpUser,
                 password: ftpPassword,
             });
+            const cleaner = new cleaner_1.Cleaner(cleanupDirs, session);
             const uploader = new uploader_1.Uploader(localRoot, remoteRoot, session);
             core.info('Starting upload ...');
             const start = new Date();
             core.debug(start.toTimeString());
             yield uploader.upload();
+            yield cleaner.cleanup();
             const end = new Date();
             core.debug(end.toTimeString());
             const durationMs = end.valueOf() - start.valueOf();
@@ -133,13 +253,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Session = void 0;
 const core = __importStar(__nccwpck_require__(7484));
-const tough_cookie_1 = __nccwpck_require__(3844);
 const axios_1 = __importDefault(__nccwpck_require__(7269));
-const promises_1 = __nccwpck_require__(1943);
-const form_data_1 = __importDefault(__nccwpck_require__(6454));
-const http_1 = __nccwpck_require__(1110);
-const crypto_1 = __nccwpck_require__(6982);
 const axios_cookiejar_support_1 = __nccwpck_require__(548);
+const crypto_1 = __nccwpck_require__(6982);
+const form_data_1 = __importDefault(__nccwpck_require__(6454));
+const promises_1 = __nccwpck_require__(1943);
+const http_1 = __nccwpck_require__(1110);
+const tough_cookie_1 = __nccwpck_require__(3844);
 function isSuccess(resp) {
     return resp.result === 'success';
 }
@@ -162,6 +282,10 @@ function translateQuota(q) {
 class Session {
     constructor(options) {
         this.options = options;
+        this.currentDir = '/';
+        // TODO: find a better way to describe per-API arguments and results.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+        this.apiEventListeners = new Map();
         this.jar = new tough_cookie_1.CookieJar();
         this.axios = (0, axios_cookiejar_support_1.wrapper)(axios_1.default.create({
             httpsAgent: new http_1.HttpsCookieAgent({
@@ -172,6 +296,12 @@ class Session {
             baseURL: options.baseUrl,
             withCredentials: true,
         }));
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+    subscribeApiResult(api, handler) {
+        const handlers = this.apiEventListeners.get(api) || [];
+        handlers.push(handler);
+        this.apiEventListeners.set(api, handlers);
     }
     connect() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -225,15 +355,15 @@ class Session {
             }
         });
     }
-    remove(path) {
+    remove(paths) {
         return __awaiter(this, void 0, void 0, function* () {
+            const pathsToRemove = JSON.stringify(paths);
             const resp = yield this.callApi('remove_file_or_folder', {
-                aPathToRemove: `["${path}"]`,
-                other: 'fullpath',
+                aPathToRemove: pathsToRemove,
             });
-            core.debug(`remove_file_or_folder result for '${path}': ${JSON.stringify(resp.data)}`);
+            core.debug(`remove_file_or_folder result for '${pathsToRemove}': ${JSON.stringify(resp.data)}`);
             if (!isSuccess(resp.data)) {
-                throw new Error(`remove failed for '${path}': ${resp.data.message}`);
+                throw new Error(`remove failed for '${pathsToRemove}': ${resp.data.message}`);
             }
         });
     }
@@ -257,6 +387,7 @@ class Session {
                 currentDir: resp.data.sPath,
                 subDirs: directories || [],
             };
+            this.currentDir = res.currentDir;
             core.debug(`update_tree_list result for '${folderName}': ${JSON.stringify(resp.data)}`);
             if (folderName === '/') {
                 const quota = translateQuota((_b = resp.data.aQuotas) === null || _b === void 0 ? void 0 : _b.site);
@@ -264,6 +395,35 @@ class Session {
                     core.info(`Quota: used ${quota.used} (${quota.pourcent}%) of ${quota.total} total, ${quota.pourcent_free}% free.`);
                 }
             }
+            try {
+                yield this.notifyApiEventListeners('cd', folderName, res);
+            }
+            catch (e) {
+                core.warning(`cd listener notification failed: ${e}`);
+            }
+            return res;
+        });
+    }
+    ls() {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const resp = yield this.callApi('loadFolderSelected', {
+                iOffset: 0,
+                iCount: 9999,
+                sSortOrder: '',
+                sSort: 'none',
+                sSearch: '',
+            });
+            const entries = ((_a = resp.data.aLines) === null || _a === void 0 ? void 0 : _a.filter(entry => entry.sName !== undefined).map(line => ({
+                type: line.type,
+                name: line.sName,
+            }))) || [];
+            const res = {
+                success: true,
+                currentDir: this.currentDir,
+                entries,
+            };
+            core.debug(`loadFolderSelected result for '${this.currentDir}': ${JSON.stringify(resp.data)}`);
             return res;
         });
     }
@@ -309,8 +469,17 @@ class Session {
             core.debug(`upload result for '${localPath}': ${JSON.stringify(resp.data)}`);
             const res = {
                 success: resp.data.success,
+                currentDir: this.currentDir,
+                filename: fileName,
                 localPath,
+                remotePath: this.currentDir + fileName,
             };
+            try {
+                yield this.notifyApiEventListeners('upload', localPath, res);
+            }
+            catch (e) {
+                core.warning(`upload listener notification failed: ${e}`);
+            }
             return res;
         });
     }
@@ -331,7 +500,8 @@ class Session {
     }
     callApi(action, parameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.postFormData('/ftp/ajax/api.php', Object.assign(Object.assign({}, parameters), { action }));
+            const req = Object.assign(Object.assign({}, parameters), { action });
+            return yield this.postFormData('/ftp/ajax/api.php', req);
         });
     }
     postFormData(endpoint, data) {
@@ -343,6 +513,18 @@ class Session {
                 },
                 responseType: 'json',
             });
+        });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    notifyApiEventListeners(api, ...args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const listeners = this.apiEventListeners.get(api);
+            if (listeners && listeners.length > 0) {
+                for (let i = 0; i < listeners.length; i++) {
+                    const listener = listeners[i];
+                    yield listener.call(null, ...args);
+                }
+            }
         });
     }
 }

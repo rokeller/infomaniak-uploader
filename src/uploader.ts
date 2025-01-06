@@ -1,14 +1,14 @@
 import * as core from '@actions/core';
-import { Session, UploadResult } from './session';
 import { opendir } from 'fs/promises';
 import path from 'path';
+import { Session, UploadResult } from './session';
 
 export class Uploader {
     constructor(
         private readonly localRootPath: string,
         private readonly remoteRootPath: string,
         private readonly session: Session
-    ) {}
+    ) { }
 
     public async upload(): Promise<void> {
         await this.session.connect();
