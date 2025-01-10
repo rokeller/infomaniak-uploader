@@ -8675,7 +8675,14 @@ exports.parse = parse;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.canonicalDomain = canonicalDomain;
 const constants_1 = __nccwpck_require__(2777);
-const node_url_1 = __nccwpck_require__(3136);
+/**
+ * Normalizes a domain to lowercase and punycode-encoded.
+ * Runtime-agnostic equivalent to node's `domainToASCII`.
+ * @see https://nodejs.org/docs/latest-v22.x/api/url.html#urldomaintoasciidomain
+ */
+function domainToASCII(domain) {
+    return new URL(`http://${domain}`).hostname;
+}
 /**
  * Transforms a domain name into a canonical domain name. The canonical domain name is a domain name
  * that has been trimmed, lowercased, stripped of leading dot, and optionally punycode-encoded
@@ -8719,12 +8726,12 @@ function canonicalDomain(domainName) {
         if (!str.endsWith(']')) {
             str = str + ']';
         }
-        return (0, node_url_1.domainToASCII)(str).slice(1, -1); // remove [ and ]
+        return domainToASCII(str).slice(1, -1); // remove [ and ]
     }
     // convert to IDN if any non-ASCII characters
     // eslint-disable-next-line no-control-regex
     if (/[^\u0001-\u007f]/.test(str)) {
-        return (0, node_url_1.domainToASCII)(str);
+        return domainToASCII(str);
     }
     // ASCII-only domain - not canonicalized with new URL() because it may be a malformed URL
     return str.toLowerCase();
@@ -9458,6 +9465,36 @@ class Cookie {
             return Infinity;
         }
         return this.expires ? this.expires.getTime() : undefined;
+    }
+    /**
+     * Similar to {@link Cookie.expiryTime}, computes the absolute unix-epoch milliseconds that this cookie expires and returns it as a Date.
+     *
+     * The "Max-Age" attribute takes precedence over "Expires" (as per the RFC). The {@link Cookie.lastAccessed} attribute
+     * (or the `now` parameter if given) is used to offset the {@link Cookie.maxAge} attribute.
+     *
+     * If Expires ({@link Cookie.expires}) is set, that's returned.
+     *
+     * @param now - can be used to provide a time offset (instead of {@link Cookie.lastAccessed}) to use when calculating the "Max-Age" value
+     */
+    expiryDate(now) {
+        const millisec = this.expiryTime(now);
+        if (millisec == Infinity) {
+            // The 31-bit value of 2147483647000 was chosen to be the MAX_TIME representable
+            // in tough-cookie though MDN states that the actual maximum value for a Date is 8.64e15.
+            // I'm guessing this is due to the Y2038 problem that would affect systems that store
+            // unix time as 32-bit integers.
+            // See:
+            // - https://github.com/salesforce/tough-cookie/commit/0616f70bf725e00c63d442544ad230c4f8b23357
+            // - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#the_epoch_timestamps_and_invalid_date
+            // - https://en.wikipedia.org/wiki/Year_2038_problem
+            return new Date(2147483647000);
+        }
+        else if (millisec == -Infinity) {
+            return new Date(0);
+        }
+        else {
+            return millisec == undefined ? undefined : new Date(millisec);
+        }
     }
     /**
      * Indicates if the cookie has been persisted to a store or not.
@@ -10212,7 +10249,7 @@ class CookieJar {
             // deferred from S5.3
             // non-RFC: allow retention of expired cookies by choice
             const expiryTime = c.expiryTime();
-            if (expireCheck && expiryTime && expiryTime <= now) {
+            if (expireCheck && expiryTime != undefined && expiryTime <= now) {
                 store.removeCookie(c.domain, c.path, c.key, () => { }); // result ignored
                 return false;
             }
@@ -11630,8 +11667,7 @@ function pathMatch(reqPath, cookiePath) {
         // " o  The cookie-path is a prefix of the request-path, and the first
         // character of the request-path that is not included in the cookie- path
         // is a %x2F ("/") character."
-        if (new RegExp(`^${cookiePath}`).test(reqPath) &&
-            reqPath[cookiePath.length] === '/') {
+        if (reqPath.startsWith(cookiePath) && reqPath[cookiePath.length] === '/') {
             return true;
         }
     }
@@ -11812,7 +11848,8 @@ const safeToStringImpl = (val, seenArrays = new WeakSet()) => {
         return Array.isArray(val)
             ? // Arrays have a weird custom toString that we need to replicate
                 safeArrayToString(val, seenArrays)
-            : String(val);
+            : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                String(val);
     }
     else {
         // This case should just be objects with null prototype, so we can just use Object#toString
@@ -11992,7 +12029,7 @@ exports.version = void 0;
  * The version of `tough-cookie`
  * @public
  */
-exports.version = '5.0.0';
+exports.version = '5.1.0';
 
 
 /***/ }),
