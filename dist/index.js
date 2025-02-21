@@ -8760,11 +8760,12 @@ exports.IP_V6_REGEX_OBJECT = exports.PrefixSecurityEnum = void 0;
  * - `unsafe-disabled` - Disables cookie prefix checking.
  * @public
  */
-exports.PrefixSecurityEnum = Object.freeze({
+exports.PrefixSecurityEnum = {
     SILENT: 'silent',
     STRICT: 'strict',
     DISABLED: 'unsafe-disabled',
-});
+};
+Object.freeze(exports.PrefixSecurityEnum);
 const IP_V6_REGEX = `
 \\[?(?:
 (?:[a-fA-F\\d]{1,4}:){7}(?:[a-fA-F\\d]{1,4}|:)|
@@ -12029,7 +12030,7 @@ exports.version = void 0;
  * The version of `tough-cookie`
  * @public
  */
-exports.version = '5.1.0';
+exports.version = '5.1.1';
 
 
 /***/ }),
