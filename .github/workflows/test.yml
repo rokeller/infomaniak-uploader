@@ -11,12 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - run: |
-          yarn
+          pnpm i
+          pnpm all
       - run: |
-          yarn all
-      - run: |
-          yarn test
+          pnpm test
         # the secrets below are not available for pull requests, so let's run
         # tests only when we're not dealing with a pull request.
         if: ${{ github.event_name != 'pull_request' }}

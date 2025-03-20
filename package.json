@@ -11,8 +11,8 @@
     "lint": "eslint",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
-    "all": "yarn build && yarn lint && yarn package",
-    "test-all": "yarn build && yarn lint && yarn package && yarn test"
+    "all": "pnpm build && pnpm lint && pnpm package",
+    "test-all": "pnpm build && pnpm lint && pnpm package && pnpm test"
   },
   "repository": {
     "type": "git",
