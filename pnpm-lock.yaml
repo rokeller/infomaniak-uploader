@@ -12,11 +12,11 @@ importers:
         specifier: ^1.11.1
         version: 1.11.1
       axios:
-        specifier: ^1.7.9
-        version: 1.7.9
+        specifier: ^1.8.2
+        version: 1.8.2
       axios-cookiejar-support:
         specifier: ^5.0.5
-        version: 5.0.5(axios@1.7.9)(tough-cookie@5.1.1)(undici@5.28.5)
+        version: 5.0.5(axios@1.8.2)(tough-cookie@5.1.1)(undici@5.28.5)
       form-data:
         specifier: ^4.0.2
         version: 4.0.2
@@ -667,8 +667,8 @@ packages:
       axios: '>=0.20.0'
       tough-cookie: '>=4.0.0'
 
-  axios@1.7.9:
-    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
+  axios@1.8.2:
+    resolution: {integrity: sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==}
 
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
@@ -1192,8 +1192,8 @@ packages:
   flatted@3.3.1:
     resolution: {integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==}
 
-  follow-redirects@1.15.6:
-    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
+  follow-redirects@1.15.9:
+    resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -3167,17 +3167,17 @@ snapshots:
 
   axe-core@4.10.2: {}
 
-  axios-cookiejar-support@5.0.5(axios@1.7.9)(tough-cookie@5.1.1)(undici@5.28.5):
+  axios-cookiejar-support@5.0.5(axios@1.8.2)(tough-cookie@5.1.1)(undici@5.28.5):
     dependencies:
-      axios: 1.7.9
+      axios: 1.8.2
       http-cookie-agent: 6.0.8(tough-cookie@5.1.1)(undici@5.28.5)
       tough-cookie: 5.1.1
     transitivePeerDependencies:
       - undici
 
-  axios@1.7.9:
+  axios@1.8.2:
     dependencies:
-      follow-redirects: 1.15.6
+      follow-redirects: 1.15.9
       form-data: 4.0.2
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -3831,7 +3831,7 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  follow-redirects@1.15.6: {}
+  follow-redirects@1.15.9: {}
 
   for-each@0.3.3:
     dependencies:
