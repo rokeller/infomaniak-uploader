@@ -12,11 +12,11 @@ importers:
         specifier: ^1.11.1
         version: 1.11.1
       axios:
-        specifier: ^1.8.2
-        version: 1.8.2
+        specifier: ^1.8.4
+        version: 1.8.4
       axios-cookiejar-support:
         specifier: ^5.0.5
-        version: 5.0.5(axios@1.8.2)(tough-cookie@5.1.1)(undici@5.28.5)
+        version: 5.0.5(axios@1.8.4)(tough-cookie@5.1.1)(undici@5.28.5)
       form-data:
         specifier: ^4.0.2
         version: 4.0.2
@@ -777,8 +777,8 @@ packages:
       axios: '>=0.20.0'
       tough-cookie: '>=4.0.0'
 
-  axios@1.8.2:
-    resolution: {integrity: sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==}
+  axios@1.8.4:
+    resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
 
   axobject-query@4.1.0:
     resolution: {integrity: sha512-qIj0G9wZbMGNLjLmg1PT6v2mE9AH2zlnADJD/2tC6E00hgmhUOfEB6greHPAfLRSufHqROIUTkw6E+M3lH0PTQ==}
@@ -3717,15 +3717,15 @@ snapshots:
 
   axe-core@4.10.3: {}
 
-  axios-cookiejar-support@5.0.5(axios@1.8.2)(tough-cookie@5.1.1)(undici@5.28.5):
+  axios-cookiejar-support@5.0.5(axios@1.8.4)(tough-cookie@5.1.1)(undici@5.28.5):
     dependencies:
-      axios: 1.8.2
+      axios: 1.8.4
       http-cookie-agent: 6.0.8(tough-cookie@5.1.1)(undici@5.28.5)
       tough-cookie: 5.1.1
     transitivePeerDependencies:
       - undici
 
-  axios@1.8.2:
+  axios@1.8.4:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.2
