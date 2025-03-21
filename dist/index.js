@@ -253,8 +253,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Session = void 0;
 const core = __importStar(__nccwpck_require__(9999));
-const axios_1 = __importDefault(__nccwpck_require__(6664));
-const axios_cookiejar_support_1 = __nccwpck_require__(8962);
+const axios_1 = __importDefault(__nccwpck_require__(310));
+const axios_cookiejar_support_1 = __nccwpck_require__(4496);
 const crypto_1 = __nccwpck_require__(6982);
 const form_data_1 = __importDefault(__nccwpck_require__(637));
 const promises_1 = __nccwpck_require__(1943);
@@ -4557,7 +4557,7 @@ function descending(a, b)
 
 /***/ }),
 
-/***/ 8962:
+/***/ 4496:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -37487,11 +37487,11 @@ module.exports = parseParams
 
 /***/ }),
 
-/***/ 6664:
+/***/ 310:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
-/*! Axios v1.8.2 Copyright (c) 2025 Matt Zabriskie and contributors */
+/*! Axios v1.8.4 Copyright (c) 2025 Matt Zabriskie and contributors */
 
 
 const FormData$1 = __nccwpck_require__(637);
@@ -39571,13 +39571,13 @@ function combineURLs(baseURL, relativeURL) {
  */
 function buildFullPath(baseURL, requestedURL, allowAbsoluteUrls) {
   let isRelativeUrl = !isAbsoluteURL(requestedURL);
-  if (baseURL && isRelativeUrl || allowAbsoluteUrls == false) {
+  if (baseURL && (isRelativeUrl || allowAbsoluteUrls == false)) {
     return combineURLs(baseURL, requestedURL);
   }
   return requestedURL;
 }
 
-const VERSION = "1.8.2";
+const VERSION = "1.8.4";
 
 function parseProtocol(url) {
   const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
@@ -40895,7 +40895,7 @@ const resolveConfig = (config) => {
 
   newConfig.headers = headers = AxiosHeaders$1.from(headers);
 
-  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url), config.params, config.paramsSerializer);
+  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url, newConfig.allowAbsoluteUrls), config.params, config.paramsSerializer);
 
   // HTTP basic authentication
   if (auth) {
