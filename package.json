@@ -41,7 +41,7 @@
     "@types/tough-cookie": "^4.0.5",
     "@vercel/ncc": "^0.38.3",
     "dotenv": "^16.3.2",
-    "eslint": "^9.22.0",
+    "eslint": "^9.23.0",
     "eslint-plugin-github": "^6.0.0",
     "eslint-plugin-jest": "^28.11.0",
     "globals": "^16.0.0",
