@@ -254,11 +254,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Session = void 0;
 const core = __importStar(__nccwpck_require__(9999));
 const axios_1 = __importDefault(__nccwpck_require__(310));
-const axios_cookiejar_support_1 = __nccwpck_require__(6069);
+const axios_cookiejar_support_1 = __nccwpck_require__(1418);
 const crypto_1 = __nccwpck_require__(6982);
 const form_data_1 = __importDefault(__nccwpck_require__(637));
 const promises_1 = __nccwpck_require__(1943);
-const http_1 = __nccwpck_require__(3265);
+const http_1 = __nccwpck_require__(706);
 const tough_cookie_1 = __nccwpck_require__(3668);
 function isSuccess(resp) {
     return resp.result === 'success';
@@ -4557,14 +4557,14 @@ function descending(a, b)
 
 /***/ }),
 
-/***/ 6069:
+/***/ 1418:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.wrapper = wrapper;
-const http_1 = __nccwpck_require__(3265);
+const http_1 = __nccwpck_require__(3898);
 const AGENT_CREATED_BY_AXIOS_COOKIEJAR_SUPPORT = Symbol('AGENT_CREATED_BY_AXIOS_COOKIEJAR_SUPPORT');
 function requestInterceptor(config) {
     if (!config.jar) {
@@ -8038,7 +8038,7 @@ module.exports = bind.call(call, $hasOwn);
 
 /***/ }),
 
-/***/ 5723:
+/***/ 8750:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8049,9 +8049,9 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.createCookieAgent = createCookieAgent;
 var _nodeUrl = _interopRequireDefault(__nccwpck_require__(3136));
-var _create_cookie_header_value = __nccwpck_require__(9076);
-var _save_cookies_from_header = __nccwpck_require__(6757);
-var _validate_cookie_options = __nccwpck_require__(9307);
+var _create_cookie_header_value = __nccwpck_require__(6233);
+var _save_cookies_from_header = __nccwpck_require__(8952);
+var _validate_cookie_options = __nccwpck_require__(7584);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const kCookieOptions = Symbol('cookieOptions');
 const kReimplicitHeader = Symbol('reimplicitHeader');
@@ -8159,7 +8159,7 @@ function createCookieAgent(BaseAgentClass) {
 
 /***/ }),
 
-/***/ 6355:
+/***/ 9642:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8170,13 +8170,13 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.HttpCookieAgent = void 0;
 var _nodeHttp = _interopRequireDefault(__nccwpck_require__(7067));
-var _create_cookie_agent = __nccwpck_require__(5723);
+var _create_cookie_agent = __nccwpck_require__(8750);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const HttpCookieAgent = exports.HttpCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttp.default.Agent);
 
 /***/ }),
 
-/***/ 1818:
+/***/ 4105:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8187,13 +8187,13 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.HttpsCookieAgent = void 0;
 var _nodeHttps = _interopRequireDefault(__nccwpck_require__(4708));
-var _create_cookie_agent = __nccwpck_require__(5723);
+var _create_cookie_agent = __nccwpck_require__(8750);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const HttpsCookieAgent = exports.HttpsCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttps.default.Agent);
 
 /***/ }),
 
-/***/ 7490:
+/***/ 913:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8226,14 +8226,14 @@ Object.defineProperty(exports, "createCookieAgent", ({
     return _create_cookie_agent.createCookieAgent;
   }
 }));
-var _create_cookie_agent = __nccwpck_require__(5723);
-var _http_cookie_agent = __nccwpck_require__(6355);
-var _https_cookie_agent = __nccwpck_require__(1818);
-var _mixed_cookie_agent = __nccwpck_require__(2375);
+var _create_cookie_agent = __nccwpck_require__(8750);
+var _http_cookie_agent = __nccwpck_require__(9642);
+var _https_cookie_agent = __nccwpck_require__(4105);
+var _mixed_cookie_agent = __nccwpck_require__(5127);
 
 /***/ }),
 
-/***/ 2375:
+/***/ 5127:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8244,8 +8244,8 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.MixedCookieAgent = void 0;
 var _agentBase = __nccwpck_require__(3690);
-var _http_cookie_agent = __nccwpck_require__(6355);
-var _https_cookie_agent = __nccwpck_require__(1818);
+var _http_cookie_agent = __nccwpck_require__(9642);
+var _https_cookie_agent = __nccwpck_require__(4105);
 class MixedCookieAgent extends _agentBase.Agent {
   constructor(options) {
     super();
@@ -8260,7 +8260,7 @@ exports.MixedCookieAgent = MixedCookieAgent;
 
 /***/ }),
 
-/***/ 9076:
+/***/ 6233:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8298,7 +8298,7 @@ function createCookieHeaderValue({
 
 /***/ }),
 
-/***/ 6757:
+/***/ 8952:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -8328,7 +8328,7 @@ function saveCookiesFromHeader({
 
 /***/ }),
 
-/***/ 9307:
+/***/ 7584:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -8349,10 +8349,329 @@ function validateCookieOptions(opts) {
 
 /***/ }),
 
-/***/ 3265:
+/***/ 3898:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __nccwpck_require__(7490);
+module.exports = __nccwpck_require__(913);
+
+
+/***/ }),
+
+/***/ 54:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.createCookieAgent = createCookieAgent;
+var _nodeUrl = _interopRequireDefault(__nccwpck_require__(3136));
+var _create_cookie_header_value = __nccwpck_require__(769);
+var _save_cookies_from_header = __nccwpck_require__(512);
+var _validate_cookie_options = __nccwpck_require__(9704);
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const kCookieOptions = Symbol('cookieOptions');
+const kReimplicitHeader = Symbol('reimplicitHeader');
+const kRecreateFirstChunk = Symbol('recreateFirstChunk');
+const kOverrideRequest = Symbol('overrideRequest');
+function createCookieAgent(BaseAgentClass) {
+  // @ts-expect-error -- BaseAgentClass is type definition.
+  class CookieAgent extends BaseAgentClass {
+    constructor(...params) {
+      const {
+        cookies: cookieOptions
+      } = params.find(opt => {
+        return opt != null && typeof opt === 'object' && 'cookies' in opt;
+      }) ?? {};
+      super(...params);
+      if (cookieOptions) {
+        (0, _validate_cookie_options.validateCookieOptions)(cookieOptions);
+      }
+      this[kCookieOptions] = cookieOptions;
+    }
+    [kReimplicitHeader](req) {
+      const _headerSent = req._headerSent;
+      req._header = null;
+      req._implicitHeader();
+      req._headerSent = _headerSent;
+    }
+    [kRecreateFirstChunk](req) {
+      const firstChunk = req.outputData[0];
+      if (req._header == null || firstChunk == null) {
+        return;
+      }
+      const prevData = firstChunk.data;
+      const prevHeaderLength = prevData.indexOf('\r\n\r\n');
+      if (prevHeaderLength === -1) {
+        firstChunk.data = req._header;
+      } else {
+        firstChunk.data = `${req._header}${prevData.slice(prevHeaderLength + 4)}`;
+      }
+      const diffSize = firstChunk.data.length - prevData.length;
+      req.outputSize += diffSize;
+      req._onPendingData(diffSize);
+    }
+    [kOverrideRequest](req, requestUrl, cookieOptions) {
+      const _implicitHeader = req._implicitHeader.bind(req);
+      req._implicitHeader = () => {
+        try {
+          const cookieHeader = (0, _create_cookie_header_value.createCookieHeaderValue)({
+            cookieOptions,
+            passedValues: [req.getHeader('Cookie')].flat(),
+            requestUrl
+          });
+          if (cookieHeader) {
+            req.setHeader('Cookie', cookieHeader);
+          }
+        } catch (err) {
+          req.destroy(err);
+          return;
+        }
+        _implicitHeader();
+      };
+      const emit = req.emit.bind(req);
+      req.emit = (event, ...args) => {
+        if (event === 'response') {
+          try {
+            const res = args[0];
+            (0, _save_cookies_from_header.saveCookiesFromHeader)({
+              cookieOptions,
+              cookies: res.headers['set-cookie'],
+              requestUrl
+            });
+          } catch (err) {
+            req.destroy(err);
+            return false;
+          }
+        }
+        return emit(event, ...args);
+      };
+    }
+    addRequest(req, options) {
+      const cookieOptions = this[kCookieOptions];
+      if (cookieOptions) {
+        try {
+          const requestUrl = _nodeUrl.default.format({
+            host: req.host,
+            pathname: req.path,
+            protocol: req.protocol
+          });
+          this[kOverrideRequest](req, requestUrl, cookieOptions);
+          if (req._header != null) {
+            this[kReimplicitHeader](req);
+          }
+          if (req._headerSent) {
+            this[kRecreateFirstChunk](req);
+          }
+        } catch (err) {
+          req.destroy(err);
+          return;
+        }
+      }
+      super.addRequest(req, options);
+    }
+  }
+  return CookieAgent;
+}
+
+/***/ }),
+
+/***/ 2178:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.HttpCookieAgent = void 0;
+var _nodeHttp = _interopRequireDefault(__nccwpck_require__(7067));
+var _create_cookie_agent = __nccwpck_require__(54);
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const HttpCookieAgent = exports.HttpCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttp.default.Agent);
+
+/***/ }),
+
+/***/ 6513:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.HttpsCookieAgent = void 0;
+var _nodeHttps = _interopRequireDefault(__nccwpck_require__(4708));
+var _create_cookie_agent = __nccwpck_require__(54);
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+const HttpsCookieAgent = exports.HttpsCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttps.default.Agent);
+
+/***/ }),
+
+/***/ 9443:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "HttpCookieAgent", ({
+  enumerable: true,
+  get: function () {
+    return _http_cookie_agent.HttpCookieAgent;
+  }
+}));
+Object.defineProperty(exports, "HttpsCookieAgent", ({
+  enumerable: true,
+  get: function () {
+    return _https_cookie_agent.HttpsCookieAgent;
+  }
+}));
+Object.defineProperty(exports, "MixedCookieAgent", ({
+  enumerable: true,
+  get: function () {
+    return _mixed_cookie_agent.MixedCookieAgent;
+  }
+}));
+Object.defineProperty(exports, "createCookieAgent", ({
+  enumerable: true,
+  get: function () {
+    return _create_cookie_agent.createCookieAgent;
+  }
+}));
+var _create_cookie_agent = __nccwpck_require__(54);
+var _http_cookie_agent = __nccwpck_require__(2178);
+var _https_cookie_agent = __nccwpck_require__(6513);
+var _mixed_cookie_agent = __nccwpck_require__(6719);
+
+/***/ }),
+
+/***/ 6719:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.MixedCookieAgent = void 0;
+var _agentBase = __nccwpck_require__(3690);
+var _http_cookie_agent = __nccwpck_require__(2178);
+var _https_cookie_agent = __nccwpck_require__(6513);
+class MixedCookieAgent extends _agentBase.Agent {
+  constructor(options) {
+    super();
+    this._httpAgent = new _http_cookie_agent.HttpCookieAgent(options);
+    this._httpsAgent = new _https_cookie_agent.HttpsCookieAgent(options);
+  }
+  connect(_req, options) {
+    return options.secureEndpoint ? this._httpsAgent : this._httpAgent;
+  }
+}
+exports.MixedCookieAgent = MixedCookieAgent;
+
+/***/ }),
+
+/***/ 769:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.createCookieHeaderValue = createCookieHeaderValue;
+var _toughCookie = __nccwpck_require__(3668);
+function createCookieHeaderValue({
+  cookieOptions,
+  passedValues,
+  requestUrl
+}) {
+  const {
+    jar
+  } = cookieOptions;
+  const cookies = jar.getCookiesSync(requestUrl);
+  const cookiesMap = new Map(cookies.map(cookie => [cookie.key, cookie]));
+  for (const passedValue of passedValues) {
+    if (typeof passedValue !== 'string') {
+      continue;
+    }
+    for (const str of passedValue.split(';')) {
+      const cookie = _toughCookie.Cookie.parse(str.trim());
+      if (cookie != null) {
+        cookiesMap.set(cookie.key, cookie);
+      }
+    }
+  }
+  const cookieHeaderValue = Array.from(cookiesMap.values()).map(cookie => cookie.cookieString()).join(';\x20');
+  return cookieHeaderValue;
+}
+
+/***/ }),
+
+/***/ 512:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.saveCookiesFromHeader = saveCookiesFromHeader;
+function saveCookiesFromHeader({
+  cookieOptions,
+  cookies,
+  requestUrl
+}) {
+  const {
+    jar
+  } = cookieOptions;
+  for (const cookie of [cookies].flat()) {
+    if (cookie == null) {
+      continue;
+    }
+    jar.setCookieSync(cookie, requestUrl, {
+      ignoreError: true
+    });
+  }
+}
+
+/***/ }),
+
+/***/ 9704:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.validateCookieOptions = validateCookieOptions;
+function validateCookieOptions(opts) {
+  if (!('jar' in opts)) {
+    throw new TypeError('invalid cookies.jar');
+  }
+  if (!opts.jar.store.synchronous) {
+    throw new TypeError('an asynchronous cookie store is not supported.');
+  }
+}
+
+/***/ }),
+
+/***/ 706:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = __nccwpck_require__(9443);
 
 
 /***/ }),
@@ -9962,7 +10281,7 @@ const getPublicSuffix_1 = __nccwpck_require__(4545);
 const validators = __importStar(__nccwpck_require__(3254));
 const utils_1 = __nccwpck_require__(3816);
 const formatDate_1 = __nccwpck_require__(421);
-const parseDate_1 = __nccwpck_require__(913);
+const parseDate_1 = __nccwpck_require__(3294);
 const canonicalDomain_1 = __nccwpck_require__(4542);
 // From RFC6265 S4.1.1
 // note that it excludes \x3B ";"
@@ -12074,7 +12393,7 @@ var domainMatch_1 = __nccwpck_require__(3009);
 Object.defineProperty(exports, "domainMatch", ({ enumerable: true, get: function () { return domainMatch_1.domainMatch; } }));
 var formatDate_1 = __nccwpck_require__(421);
 Object.defineProperty(exports, "formatDate", ({ enumerable: true, get: function () { return formatDate_1.formatDate; } }));
-var parseDate_1 = __nccwpck_require__(913);
+var parseDate_1 = __nccwpck_require__(3294);
 Object.defineProperty(exports, "parseDate", ({ enumerable: true, get: function () { return parseDate_1.parseDate; } }));
 var permutePath_1 = __nccwpck_require__(2205);
 Object.defineProperty(exports, "permutePath", ({ enumerable: true, get: function () { return permutePath_1.permutePath; } }));
@@ -12097,7 +12416,7 @@ function fromJSON(str) {
 
 /***/ }),
 
-/***/ 913:
+/***/ 3294:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
