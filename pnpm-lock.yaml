@@ -15,8 +15,8 @@ importers:
         specifier: ^1.9.0
         version: 1.9.0
       axios-cookiejar-support:
-        specifier: ^6.0.1
-        version: 6.0.1(axios@1.9.0)(tough-cookie@5.1.2)
+        specifier: ^6.0.2
+        version: 6.0.2(axios@1.9.0)(tough-cookie@5.1.2)
       form-data:
         specifier: ^4.0.2
         version: 4.0.2
@@ -783,8 +783,8 @@ packages:
     resolution: {integrity: sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==}
     engines: {node: '>=4'}
 
-  axios-cookiejar-support@6.0.1:
-    resolution: {integrity: sha512-yBmO5sPZlbrQSAkKNbF7RAd0IWqdefPcy0t4DSdPzaxdUEo6gTLFJdKOi5rA1OuwOKHQG1gYg7Y0zriuql9sVQ==}
+  axios-cookiejar-support@6.0.2:
+    resolution: {integrity: sha512-UO/g6DKfVoxnZkZz1NN669bMDjGV3snZnAZGZqIwEd8FdvFI17/rXLyMBm1j1cgtb2O6Jyi4MJ7ll49NPBEMNg==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       axios: '>=0.20.0'
@@ -3692,7 +3692,7 @@ snapshots:
 
   axe-core@4.10.3: {}
 
-  axios-cookiejar-support@6.0.1(axios@1.9.0)(tough-cookie@5.1.2):
+  axios-cookiejar-support@6.0.2(axios@1.9.0)(tough-cookie@5.1.2):
     dependencies:
       axios: 1.9.0
       http-cookie-agent: 7.0.1(tough-cookie@5.1.2)
