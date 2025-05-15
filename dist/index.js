@@ -254,7 +254,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Session = void 0;
 const core = __importStar(__nccwpck_require__(9999));
 const axios_1 = __importDefault(__nccwpck_require__(5029));
-const axios_cookiejar_support_1 = __nccwpck_require__(9847);
+const axios_cookiejar_support_1 = __nccwpck_require__(8308);
 const crypto_1 = __nccwpck_require__(6982);
 const form_data_1 = __importDefault(__nccwpck_require__(637));
 const promises_1 = __nccwpck_require__(1943);
@@ -42240,7 +42240,7 @@ module.exports = axios;
 
 /***/ }),
 
-/***/ 9847:
+/***/ 8308:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
