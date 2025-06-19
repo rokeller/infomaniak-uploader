@@ -4849,7 +4849,7 @@ CombinedStream.prototype._emitError = function(err) {
 
 /***/ }),
 
-/***/ 4885:
+/***/ 4468:
 /***/ ((module, exports, __nccwpck_require__) => {
 
 /* eslint-env browser */
@@ -5073,7 +5073,7 @@ function save(namespaces) {
 function load() {
 	let r;
 	try {
-		r = exports.storage.getItem('debug');
+		r = exports.storage.getItem('debug') || exports.storage.getItem('DEBUG') ;
 	} catch (error) {
 		// Swallow
 		// XXX (@Qix-) should we be logging these?
@@ -5109,7 +5109,7 @@ function localstorage() {
 	}
 }
 
-module.exports = __nccwpck_require__(8228)(exports);
+module.exports = __nccwpck_require__(1163)(exports);
 
 const {formatters} = module.exports;
 
@@ -5128,7 +5128,7 @@ formatters.j = function (v) {
 
 /***/ }),
 
-/***/ 8228:
+/***/ 1163:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -5301,7 +5301,7 @@ function setup(env) {
 
 		const split = (typeof namespaces === 'string' ? namespaces : '')
 			.trim()
-			.replace(' ', ',')
+			.replace(/\s+/g, ',')
 			.split(',')
 			.filter(Boolean);
 
@@ -5427,7 +5427,7 @@ module.exports = setup;
 
 /***/ }),
 
-/***/ 1541:
+/***/ 9592:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
@@ -5436,15 +5436,15 @@ module.exports = setup;
  */
 
 if (typeof process === 'undefined' || process.type === 'renderer' || process.browser === true || process.__nwjs) {
-	module.exports = __nccwpck_require__(4885);
+	module.exports = __nccwpck_require__(4468);
 } else {
-	module.exports = __nccwpck_require__(7709);
+	module.exports = __nccwpck_require__(3606);
 }
 
 
 /***/ }),
 
-/***/ 7709:
+/***/ 3606:
 /***/ ((module, exports, __nccwpck_require__) => {
 
 /**
@@ -5686,7 +5686,7 @@ function init(debug) {
 	}
 }
 
-module.exports = __nccwpck_require__(8228)(exports);
+module.exports = __nccwpck_require__(1163)(exports);
 
 const {formatters} = module.exports;
 
@@ -6036,7 +6036,7 @@ module.exports = function () {
   if (!debug) {
     try {
       /* eslint global-require: off */
-      debug = __nccwpck_require__(1541)("follow-redirects");
+      debug = __nccwpck_require__(9592)("follow-redirects");
     }
     catch (error) { /* */ }
     if (typeof debug !== "function") {

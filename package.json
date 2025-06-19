@@ -34,13 +34,13 @@
     "tough-cookie": "^5.1.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.26.0",
+    "@eslint/js": "^9.29.0",
     "@jest/globals": "^29.7.0",
     "@types/node": "^22.0.0",
     "@types/tough-cookie": "^4.0.5",
     "@vercel/ncc": "^0.38.3",
     "dotenv": "^16.5.0",
-    "eslint": "^9.26.0",
+    "eslint": "^9.29.0",
     "eslint-plugin-github": "^6.0.0",
     "eslint-plugin-jest": "^28.11.0",
     "globals": "^16.2.0",
