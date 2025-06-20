@@ -253,8 +253,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Session = void 0;
 const core = __importStar(__nccwpck_require__(9999));
-const axios_1 = __importDefault(__nccwpck_require__(5029));
-const axios_cookiejar_support_1 = __nccwpck_require__(8308);
+const axios_1 = __importDefault(__nccwpck_require__(3053));
+const axios_cookiejar_support_1 = __nccwpck_require__(8504);
 const crypto_1 = __nccwpck_require__(6982);
 const form_data_1 = __importDefault(__nccwpck_require__(6096));
 const promises_1 = __nccwpck_require__(1943);
@@ -37446,11 +37446,11 @@ module.exports = parseParams
 
 /***/ }),
 
-/***/ 5029:
+/***/ 3053:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
-/*! Axios v1.9.0 Copyright (c) 2025 Matt Zabriskie and contributors */
+/*! Axios v1.10.0 Copyright (c) 2025 Matt Zabriskie and contributors */
 
 
 const FormData$1 = __nccwpck_require__(6096);
@@ -38436,6 +38436,10 @@ function toFormData(obj, formData, options) {
 
     if (utils$1.isDate(value)) {
       return value.toISOString();
+    }
+
+    if (utils$1.isBoolean(value)) {
+      return value.toString();
     }
 
     if (!useBlob && utils$1.isBlob(value)) {
@@ -39554,7 +39558,7 @@ function buildFullPath(baseURL, requestedURL, allowAbsoluteUrls) {
   return requestedURL;
 }
 
-const VERSION = "1.9.0";
+const VERSION = "1.10.0";
 
 function parseProtocol(url) {
   const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
@@ -41391,7 +41395,7 @@ const fetchAdapter = isFetchSupported && (async (config) => {
       credentials: isCredentialsSupported ? withCredentials : undefined
     });
 
-    let response = await fetch(request);
+    let response = await fetch(request, fetchOptions);
 
     const isStreamResponse = supportsResponseStream && (responseType === 'stream' || responseType === 'response');
 
@@ -42237,7 +42241,7 @@ module.exports = axios;
 
 /***/ }),
 
-/***/ 8308:
+/***/ 8504:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
