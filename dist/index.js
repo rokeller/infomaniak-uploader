@@ -254,11 +254,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Session = void 0;
 const core = __importStar(__nccwpck_require__(9999));
 const axios_1 = __importDefault(__nccwpck_require__(3053));
-const axios_cookiejar_support_1 = __nccwpck_require__(8504);
+const axios_cookiejar_support_1 = __nccwpck_require__(2470);
 const crypto_1 = __nccwpck_require__(6982);
-const form_data_1 = __importDefault(__nccwpck_require__(6096));
+const form_data_1 = __importDefault(__nccwpck_require__(4455));
 const promises_1 = __nccwpck_require__(1943);
-const http_1 = __nccwpck_require__(706);
+const http_1 = __nccwpck_require__(1241);
 const tough_cookie_1 = __nccwpck_require__(3668);
 function isSuccess(resp) {
     return resp.result === 'success';
@@ -3856,7 +3856,7 @@ function copyFile(srcFile, destFile, force) {
 
 /***/ }),
 
-/***/ 5355:
+/***/ 5980:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -3929,7 +3929,7 @@ exports.req = req;
 
 /***/ }),
 
-/***/ 3690:
+/***/ 3249:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -3965,7 +3965,7 @@ exports.Agent = void 0;
 const net = __importStar(__nccwpck_require__(9278));
 const http = __importStar(__nccwpck_require__(8611));
 const https_1 = __nccwpck_require__(5692);
-__exportStar(__nccwpck_require__(5355), exports);
+__exportStar(__nccwpck_require__(5980), exports);
 const INTERNAL = Symbol('AgentBaseInternalState');
 class Agent extends http.Agent {
     constructor(opts) {
@@ -4046,9 +4046,7 @@ class Agent extends http.Agent {
     // In order to properly update the socket pool, we need to call `getName()` on
     // the core `https.Agent` if it is a secureEndpoint.
     getName(options) {
-        const secureEndpoint = typeof options.secureEndpoint === 'boolean'
-            ? options.secureEndpoint
-            : this.isSecureEndpoint(options);
+        const secureEndpoint = this.isSecureEndpoint(options);
         if (secureEndpoint) {
             // @ts-expect-error `getName()` isn't defined in `@types/node`
             return https_1.Agent.prototype.getName.call(this, options);
@@ -6742,7 +6740,7 @@ module.exports.wrap = wrap;
 
 /***/ }),
 
-/***/ 6096:
+/***/ 4455:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -6756,11 +6754,12 @@ var https = __nccwpck_require__(5692);
 var parseUrl = (__nccwpck_require__(7016).parse);
 var fs = __nccwpck_require__(9896);
 var Stream = (__nccwpck_require__(2203).Stream);
+var crypto = __nccwpck_require__(6982);
 var mime = __nccwpck_require__(6553);
 var asynckit = __nccwpck_require__(5094);
 var setToStringTag = __nccwpck_require__(4879);
 var hasOwn = __nccwpck_require__(2618);
-var populate = __nccwpck_require__(1605);
+var populate = __nccwpck_require__(16);
 
 /**
  * Create readable "multipart/form-data" streams.
@@ -7093,12 +7092,7 @@ FormData.prototype._generateBoundary = function () {
   // This generates a 50 character boundary similar to those used by Firefox.
 
   // They are optimized for boyer-moore parsing.
-  var boundary = '--------------------------';
-  for (var i = 0; i < 24; i++) {
-    boundary += Math.floor(Math.random() * 10).toString(16);
-  }
-
-  this._boundary = boundary;
+  this._boundary = '--------------------------' + crypto.randomBytes(12).toString('hex');
 };
 
 // Note: getLengthSync DOESN'T calculate streams length
@@ -7248,7 +7242,7 @@ module.exports = FormData;
 
 /***/ }),
 
-/***/ 1605:
+/***/ 16:
 /***/ ((module) => {
 
 "use strict";
@@ -7976,7 +7970,7 @@ module.exports = bind.call(call, $hasOwn);
 
 /***/ }),
 
-/***/ 54:
+/***/ 6035:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -7987,9 +7981,9 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.createCookieAgent = createCookieAgent;
 var _nodeUrl = _interopRequireDefault(__nccwpck_require__(3136));
-var _create_cookie_header_value = __nccwpck_require__(769);
-var _save_cookies_from_header = __nccwpck_require__(512);
-var _validate_cookie_options = __nccwpck_require__(9704);
+var _create_cookie_header_value = __nccwpck_require__(8268);
+var _save_cookies_from_header = __nccwpck_require__(1773);
+var _validate_cookie_options = __nccwpck_require__(5299);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const kCookieOptions = Symbol('cookieOptions');
 const kReimplicitHeader = Symbol('reimplicitHeader');
@@ -8097,7 +8091,7 @@ function createCookieAgent(BaseAgentClass) {
 
 /***/ }),
 
-/***/ 2178:
+/***/ 1627:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8108,13 +8102,13 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.HttpCookieAgent = void 0;
 var _nodeHttp = _interopRequireDefault(__nccwpck_require__(7067));
-var _create_cookie_agent = __nccwpck_require__(54);
+var _create_cookie_agent = __nccwpck_require__(6035);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const HttpCookieAgent = exports.HttpCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttp.default.Agent);
 
 /***/ }),
 
-/***/ 6513:
+/***/ 402:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8125,13 +8119,13 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.HttpsCookieAgent = void 0;
 var _nodeHttps = _interopRequireDefault(__nccwpck_require__(4708));
-var _create_cookie_agent = __nccwpck_require__(54);
+var _create_cookie_agent = __nccwpck_require__(6035);
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const HttpsCookieAgent = exports.HttpsCookieAgent = (0, _create_cookie_agent.createCookieAgent)(_nodeHttps.default.Agent);
 
 /***/ }),
 
-/***/ 9443:
+/***/ 282:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8164,14 +8158,14 @@ Object.defineProperty(exports, "createCookieAgent", ({
     return _create_cookie_agent.createCookieAgent;
   }
 }));
-var _create_cookie_agent = __nccwpck_require__(54);
-var _http_cookie_agent = __nccwpck_require__(2178);
-var _https_cookie_agent = __nccwpck_require__(6513);
-var _mixed_cookie_agent = __nccwpck_require__(6719);
+var _create_cookie_agent = __nccwpck_require__(6035);
+var _http_cookie_agent = __nccwpck_require__(1627);
+var _https_cookie_agent = __nccwpck_require__(402);
+var _mixed_cookie_agent = __nccwpck_require__(3500);
 
 /***/ }),
 
-/***/ 6719:
+/***/ 3500:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8181,9 +8175,9 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports.MixedCookieAgent = void 0;
-var _agentBase = __nccwpck_require__(3690);
-var _http_cookie_agent = __nccwpck_require__(2178);
-var _https_cookie_agent = __nccwpck_require__(6513);
+var _agentBase = __nccwpck_require__(3249);
+var _http_cookie_agent = __nccwpck_require__(1627);
+var _https_cookie_agent = __nccwpck_require__(402);
 class MixedCookieAgent extends _agentBase.Agent {
   constructor(options) {
     super();
@@ -8198,7 +8192,7 @@ exports.MixedCookieAgent = MixedCookieAgent;
 
 /***/ }),
 
-/***/ 769:
+/***/ 8268:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8236,7 +8230,7 @@ function createCookieHeaderValue({
 
 /***/ }),
 
-/***/ 512:
+/***/ 1773:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -8266,7 +8260,7 @@ function saveCookiesFromHeader({
 
 /***/ }),
 
-/***/ 9704:
+/***/ 5299:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -8287,10 +8281,10 @@ function validateCookieOptions(opts) {
 
 /***/ }),
 
-/***/ 706:
+/***/ 1241:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __nccwpck_require__(9443);
+module.exports = __nccwpck_require__(282);
 
 
 /***/ }),
@@ -37453,7 +37447,7 @@ module.exports = parseParams
 /*! Axios v1.10.0 Copyright (c) 2025 Matt Zabriskie and contributors */
 
 
-const FormData$1 = __nccwpck_require__(6096);
+const FormData$1 = __nccwpck_require__(4455);
 const crypto = __nccwpck_require__(6982);
 const url = __nccwpck_require__(7016);
 const proxyFromEnv = __nccwpck_require__(330);
@@ -42241,7 +42235,7 @@ module.exports = axios;
 
 /***/ }),
 
-/***/ 8504:
+/***/ 2470:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -42249,7 +42243,7 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   wrapper: () => (/* binding */ wrapper)
 /* harmony export */ });
-/* harmony import */ var http_cookie_agent_http__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(706);
+/* harmony import */ var http_cookie_agent_http__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(1241);
 
 const AGENT_CREATED_BY_AXIOS_COOKIEJAR_SUPPORT = Symbol('AGENT_CREATED_BY_AXIOS_COOKIEJAR_SUPPORT');
 function requestInterceptor(config) {
