@@ -30,7 +30,7 @@
     "axios": "^1.10.0",
     "axios-cookiejar-support": "^6.0.2",
     "form-data": "^4.0.3",
-    "http-cookie-agent": "7.0.1",
+    "http-cookie-agent": "7.0.2",
     "tough-cookie": "^5.1.2"
   },
   "devDependencies": {
