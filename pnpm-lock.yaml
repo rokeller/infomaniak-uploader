@@ -28,8 +28,8 @@ importers:
         version: 5.1.2
     devDependencies:
       '@eslint/js':
-        specifier: ^9.29.0
-        version: 9.29.0
+        specifier: ^9.31.0
+        version: 9.31.0
       '@jest/globals':
         specifier: ^30.0.4
         version: 30.0.4
@@ -391,10 +391,6 @@ packages:
 
   '@eslint/eslintrc@3.3.1':
     resolution: {integrity: sha512-gtF186CXhIl1p4pJNGZw8Yc6RlshoePRvE0X91oPGb3vZ8pM3qOS9W9NGPat9LziaBV7XrJWGylNQXkGcnM3IQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@eslint/js@9.29.0':
-    resolution: {integrity: sha512-3PIF4cBw/y+1u2EazflInpV+lYsSG0aByVIQzAgb1m1MhHFSbqTyNqtBKHgWf/9Ykud+DhILS9EGkmekVhbKoQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/js@9.31.0':
@@ -3319,8 +3315,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.29.0': {}
-
   '@eslint/js@9.31.0': {}
 
   '@eslint/object-schema@2.1.6': {}
@@ -4637,7 +4631,7 @@ snapshots:
     dependencies:
       '@eslint/compat': 1.2.7(eslint@9.31.0)
       '@eslint/eslintrc': 3.3.0
-      '@eslint/js': 9.29.0
+      '@eslint/js': 9.31.0
       '@github/browserslist-config': 1.0.0
       '@typescript-eslint/eslint-plugin': 8.27.0(@typescript-eslint/parser@8.27.0(eslint@9.31.0)(typescript@5.8.2))(eslint@9.31.0)(typescript@5.8.2)
       '@typescript-eslint/parser': 8.27.0(eslint@9.31.0)(typescript@5.8.2)
