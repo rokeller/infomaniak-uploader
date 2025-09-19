@@ -38,6 +38,8 @@ jobs:
         run: |
           mkdir test-data
           uuidgen > test-data/test.txt
+          echo "Test data:"
+          cat test-data/test.txt
       - uses: ./
         with:
           ftpServer: ${{ secrets.TEST_FTP_SERVER }}
