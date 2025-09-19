@@ -25,7 +25,7 @@ inputs:
 # see https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
 
 branding:
