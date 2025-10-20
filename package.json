@@ -34,7 +34,7 @@
     "tough-cookie": "^6.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.37.0",
+    "@eslint/js": "^9.38.0",
     "@jest/globals": "^30.2.0",
     "@types/node": "^24.5.2",
     "@types/tough-cookie": "^4.0.5",
