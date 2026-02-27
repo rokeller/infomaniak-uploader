@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
-import { Cleaner } from './cleaner';
-import { Session } from './session';
-import { Uploader } from './uploader';
+import { Cleaner } from './cleaner.js';
+import { Session } from './session.js';
+import { Uploader } from './uploader.js';
 
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
     try {
         core.setSecret('ftpPassword');
 
@@ -57,5 +57,3 @@ async function run(): Promise<void> {
         }
     }
 }
-
-run();

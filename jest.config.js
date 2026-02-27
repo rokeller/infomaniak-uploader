@@ -1,5 +1,6 @@
-module.exports = {
+export default {
     clearMocks: true,
+    extensionsToTreatAsEsm: ['.ts'],
     moduleFileExtensions: ['js', 'ts'],
     moduleNameMapper: {
         "axios": "axios/dist/node/axios.cjs",
