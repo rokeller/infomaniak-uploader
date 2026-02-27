@@ -34,16 +34,23 @@ jobs:
       - name: Install dependencies
         run: pnpm i
 
+      - name: Remove dist/ Directory
+        run: npx rimraf ./dist
+
       - name: Rebuild the dist/ directory
         run: |
-          pnpm build
-          pnpm package
+          pnpm bundle
 
       - name: Compare the expected and actual dist/ directories
         run: |
-          if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
+          if [ ! -d dist/ ]; then
+            echo "Expected dist/ directory does not exist.  See status below:"
+            ls -la ./
+            exit 1
+          fi
+          if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
             echo "Detected uncommitted changes after build.  See status below:"
-            git diff
+            git diff --ignore-space-at-eol --text dist/
             exit 1
           fi
         id: diff

@@ -1,10 +1,21 @@
-import { beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import {
+    beforeAll,
+    beforeEach,
+    describe,
+    expect,
+    it,
+    jest,
+} from '@jest/globals';
 import axios from 'axios';
 import * as cp from 'child_process';
 import { randomUUID } from 'crypto';
 import { rm, writeFile } from 'fs/promises';
 import * as path from 'path';
 import * as process from 'process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 jest.setTimeout(30 * 1000);
 
@@ -20,12 +31,12 @@ async function createTestFile(relPath: string) {
 async function deleteTestFile(relPath: string) {
     const testFile = path.join(__dirname, relPath);
 
-    await rm(testFile, { force: true, });
+    await rm(testFile, { force: true });
 }
 
 function runAction() {
     const np = process.execPath;
-    const ip = path.join(__dirname, '..', 'lib', 'main.js');
+    const ip = path.join(__dirname, '..', 'dist', 'index.js');
     const options: cp.ExecFileSyncOptions = {
         env: process.env,
     };

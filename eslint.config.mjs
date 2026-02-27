@@ -15,7 +15,6 @@ export default tseslint.config(
     {
         ignores: [
             '**/dist/',
-            '**/lib/',
             'eslint.config.mjs',
             'jest.config.js',
         ],

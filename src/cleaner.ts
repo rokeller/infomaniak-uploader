@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { ChangeDirResult, DirEntry, Session, UploadResult } from './session';
+import { ChangeDirResult, DirEntry, Session, UploadResult } from './session.js';
 
 interface DirContents {
     entries?: Map<string, DirEntry>;
@@ -26,7 +26,7 @@ export class Cleaner {
     }
 
     public async cleanup() {
-        const paths = [... this.cleanupDirsItemsToRemove.keys()];
+        const paths = [...this.cleanupDirsItemsToRemove.keys()];
 
         for (let i = 0; i < paths.length; i++) {
             const path = paths[i];
@@ -42,7 +42,10 @@ export class Cleaner {
         }
     }
 
-    private async cleanupDirectory(path: string, snapshot: Map<string, DirEntry>) {
+    private async cleanupDirectory(
+        path: string,
+        snapshot: Map<string, DirEntry>
+    ) {
         core.info(`cleaning up directory '${path}' ...`);
         const itemsToRemove = [...snapshot.keys()];
         core.debug(`entries to remove: ${itemsToRemove.join('|')}`);

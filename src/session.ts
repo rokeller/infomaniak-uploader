@@ -4,7 +4,6 @@ import { wrapper } from 'axios-cookiejar-support';
 import { randomUUID } from 'crypto';
 import FormData from 'form-data';
 import { readFile, stat } from 'fs/promises';
-import { HttpsCookieAgent } from 'http-cookie-agent/http';
 import { Cookie, CookieJar } from 'tough-cookie';
 
 export interface SessionOptions {
@@ -137,15 +136,12 @@ export class Session implements ISession {
     private apiEventListeners: Map<SessionApis, Function[]> = new Map();
 
     constructor(private readonly options: SessionOptions) {
-        this.jar = new CookieJar();
+        const jar = new CookieJar();
+        this.jar = jar;
 
         this.axios = wrapper(
             axios.create({
-                httpsAgent: new HttpsCookieAgent({
-                    cookies: { jar: this.jar },
-                    keepAlive: true,
-                    maxSockets: 8,
-                }),
+                jar,
                 baseURL: options.baseUrl,
                 withCredentials: true,
             })
@@ -432,11 +428,11 @@ export class Session implements ISession {
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private async notifyApiEventListeners<KApi extends SessionApis, A extends any[]>(
-        api: KApi,
-        ...args: A
-    ) {
+    private async notifyApiEventListeners<
+        KApi extends SessionApis,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        A extends any[],
+    >(api: KApi, ...args: A) {
         const listeners = this.apiEventListeners.get(api);
         if (listeners && listeners.length > 0) {
             for (let i = 0; i < listeners.length; i++) {
