@@ -33,26 +33,26 @@
     "axios": "^1.13.6",
     "axios-cookiejar-support": "^6.0.5",
     "form-data": "^4.0.5",
-    "tough-cookie": "^6.0.0"
+    "tough-cookie": "^6.0.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.3",
-    "@jest/globals": "^30.2.0",
-    "@rollup/plugin-commonjs": "^29.0.0",
+    "@eslint/js": "^9.39.4",
+    "@jest/globals": "^30.3.0",
+    "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
-    "@types/node": "^24.10.15",
+    "@types/node": "^24.12.0",
     "dotenv": "^17.3.1",
-    "eslint": "^9.39.3",
+    "eslint": "^9.39.4",
     "eslint-plugin-github": "^6.0.0",
     "eslint-plugin-jest": "^29.15.0",
-    "globals": "^17.3.0",
-    "jest": "^30.2.0",
+    "globals": "^17.4.0",
+    "jest": "^30.3.0",
     "prettier": "^3.8.1",
     "rollup": "^4.59.0",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1"
+    "typescript-eslint": "^8.57.0"
   }
 }
