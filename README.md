@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> Infomaniak has recently retired their old web FTP manager in favor of a new one.
+> This action is NOT compatible with the new WebFTP that Infomaniak uses.
+
+
 <p align="center">
   <a href="https://github.com/rokeller/infomaniak-uploader/actions"><img alt="typescript-action status" src="https://github.com/rokeller/infomaniak-uploader/workflows/build-test/badge.svg"></a>
   <a href="https://github.com/rokeller/infomaniak-uploader/actions"><img alt="typescript-action status" src="https://github.com/rokeller/infomaniak-uploader/workflows/Check dist%2f/badge.svg"></a>
